@@ -14,6 +14,4 @@ const setHeader = headers => (req, res, next) => {
   next();
 };
 
-module.exports = {
-  setHeader
-};
+module.exports = setHeader;

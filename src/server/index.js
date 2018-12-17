@@ -1,7 +1,8 @@
 let express = require("express");
 
-let { callRouteAction, forwardRequest } = require("./middlewares");
-let { setHeader } = require("./middlewares/set_headers");
+let setHeader = require("./middlewares/set_headers");
+let forwardRequest = require("./middlewares/forward_request");
+let callRouteAction = require("./middlewares/call_route_action");
 
 let port = 6001;
 let server = express();
@@ -17,7 +18,7 @@ let routes = [
       payload: {},
       forward: {
         enabled: true,
-        //hostname: "https://www.practo.com",
+        hostname: "https://www.practo.com",
         headers: {}
       }
     },

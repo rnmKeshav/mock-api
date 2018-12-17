@@ -24,7 +24,6 @@ module.exports = function _request(reqMethod, endpoint = "", options = {}, host 
     .query(query)
     .set(headers);
 
-  console.log("req", req);
   if (reqMethod.toLowerCase() !== "get") {
     req = req.send(payload || {});
   }
@@ -42,6 +41,7 @@ module.exports = function _request(reqMethod, endpoint = "", options = {}, host 
       } catch (e) {
         reject(e);
       }
+
       resolve(response);
     });
   });

@@ -1,5 +1,5 @@
-let apiUtil = require("./api_util");
-let { isEmpty } = require("./utilities");
+let apiUtil = require("../api_util");
+let { isEmpty } = require("../utilities");
 let {
   forward: {
     enabled: configForwardEnabled,
@@ -7,22 +7,7 @@ let {
     hostname: configForwardHostname,
     headers: configForwardHeaders
   }
-} = require("./config");
-
-const callRouteAction = route => (req, res, next) => {
-  let { params, body } = req;
-
-  let payload = {
-    params,
-    data: body
-  };
-
-  if (route.action) {
-    route.action(payload);
-  }
-
-  next();
-};
+} = require("../config");
 
 const forwardRequest = route => (req, res, next) => {
   let {
@@ -72,7 +57,4 @@ const forwardRequest = route => (req, res, next) => {
   }
 };
 
-module.exports = {
-  callRouteAction,
-  forwardRequest
-};
+module.exports = forwardRequest;
