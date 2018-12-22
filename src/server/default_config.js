@@ -1,7 +1,7 @@
 module.exports = {
   port: 6001,
+  routes_path: "",
   forward: {
-    enabled: true,
     mode: "custom", //all, custom, none
     hostname: "https://www-latest.practo.com",
     headers: {

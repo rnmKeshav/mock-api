@@ -1,15 +1,15 @@
 let apiUtil = require("../api_util");
 let { isEmpty } = require("../utilities");
-let {
-  forward: {
-    enabled: configForwardEnabled,
-    mode: configForwardMode,
-    hostname: configForwardHostname,
-    headers: configForwardHeaders
-  }
-} = require("../config");
 
-const forwardRequest = route => (req, res, next) => {
+const forwardRequest = config => route => (req, res, next) => {
+  let {
+    forward: {
+      enabled: configForwardEnabled,
+      mode: configForwardMode,
+      hostname: configForwardHostname,
+      headers: configForwardHeaders
+    }
+  } = config;
   let {
     request: {
       forward: {
