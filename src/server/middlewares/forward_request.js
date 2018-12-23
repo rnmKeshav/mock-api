@@ -8,7 +8,7 @@ const forwardRequest = config => route => (req, res, next) => {
       mode: configForwardMode,
       hostname: configForwardHostname,
       headers: configForwardHeaders
-    }
+    } = {}
   } = config;
   let {
     request: {
@@ -22,10 +22,12 @@ const forwardRequest = config => route => (req, res, next) => {
       payload
     }
   } = route;
+  let { query } = req;
 
   if (configForwardMode == "all" || (routeForwardEnabled && configForwardMode == "custom")) {
     let reqPayload = {
       payload,
+      query,
       headers: !isEmpty(routeForwardHeaders) ? routeForwardHeaders : configForwardHeaders
     };
 

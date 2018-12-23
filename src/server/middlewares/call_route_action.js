@@ -1,9 +1,10 @@
 const callRouteAction = route => (req, res, next) => {
-  let { params, body } = req;
+  let { params, body, query } = req;
 
   let payload = {
     params,
-    data: body
+    data: body,
+    query
   };
 
   if (route.action) {

@@ -1,4 +1,3 @@
-let mockApi = require("../../src/server/index");
 /*
   Route object format 
   {
@@ -13,7 +12,7 @@ let mockApi = require("../../src/server/index");
         "X-API-TOKEN": "some_random_value"
       }
     },
-    action: function({param, data}) { // A function which has access to current route object.
+    action: function({param, data, query}) { // A function which has access to current route object.
       //param: request parameters
       // data: payload data sent in request for post/patch
     }
@@ -22,7 +21,7 @@ let mockApi = require("../../src/server/index");
 let routes = [
   {
     request: {
-      path: "/logged_in_user",
+      path: "/user",
       method: "get",
       forward: {
         enabled: false
@@ -37,6 +36,18 @@ let routes = [
         phone_number: "+919008001555",
         country: "IN",
         agent: false
+      }
+    }
+  },
+  {
+    request: {
+      path: "/users",
+      method: "POST"
+    },
+    response: {
+      data: "Bad request",
+      headers: {
+        status: 400
       }
     }
   },

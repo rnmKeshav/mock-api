@@ -1,4 +1,3 @@
-let mockApi = require("../../src/server/index");
 /*
   Route object format 
   {
