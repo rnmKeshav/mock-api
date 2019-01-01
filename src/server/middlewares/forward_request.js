@@ -23,7 +23,8 @@ const forwardRequest = config => route => (req, res, next) => {
     }
   } = route;
   let { query } = req;
-
+  configForwardMode = configForwardMode.toLowerCase();
+  
   if (configForwardMode == "all" || (routeForwardEnabled && configForwardMode == "custom")) {
     let reqPayload = {
       payload,

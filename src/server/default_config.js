@@ -3,7 +3,7 @@ module.exports = {
   routes_path: "",
   forward: {
     mode: "custom", //all, custom, none
-    hostname: "https://www-latest.practo.com",
+    hostname: "https://www.practo.com",
     headers: {
       accept: "application/json",
       "accept-encoding": "gzip, deflate, br",

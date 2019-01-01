@@ -54,6 +54,15 @@ const routes = [
         hostname: "https://api.github.com" // This overrides hostname set in config for this route's request
       }
     }
+  },
+  {
+    request: {
+      path: "/marketplace-api/dweb/search/reach",
+      method: "GET",
+      forward: {
+        enabled: true
+      }
+    }
   }
 ];
 
