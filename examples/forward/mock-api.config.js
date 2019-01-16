@@ -20,7 +20,7 @@ module.exports = {
   routes_path: "./routes.js",
   forward: {
     mode: "custom", //all, custom, none
-    hostname: "https://www-latest.practo.com",
+    hostname: "http://localhost:8888",
     headers: Object.assign({}, headers, getExtraHeader())
   }
 };
