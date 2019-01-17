@@ -47,6 +47,59 @@ const routes = [
   },
   {
     request: {
+      path: "/health/loggedinuserdetails",
+      method: "GET",
+      forward: {
+        enabled: true
+      }
+    }
+  },
+  {
+    request: {
+      path: "/wave/surveys/feedbackexists",
+      method: "POST",
+      forward: {
+        enabled: true
+      }
+    }
+  },{
+    request: {
+      path: "/feedback/phone-number",
+      method: "GET",
+      forward: {
+        enabled: true
+      }
+    }
+  },
+  {
+    request: {
+      path: "/wave/surveys",
+      method: "POST",
+      forward: {
+        enabled: true
+      }
+    }
+  },
+  {
+    request: {
+      path: "/wave/feedbacksurveys/:sid",
+      method: "GET",
+      forward: {
+        enabled: true
+      }
+    }
+  },{
+    request: {
+      path: "/wave/updatesurveys/:sid",
+      method: "PATCH",
+      forward: {
+        enabled: true
+      }
+    }
+  },
+
+  {
+    request: {
       path: "/search/users",
       method: "GET",
       forward: {

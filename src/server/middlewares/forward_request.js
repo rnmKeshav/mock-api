@@ -19,23 +19,22 @@ const forwardRequest = config => route => (req, res, next) => {
       } = {},
       path,
       method,
-      payload
+      payload: routePayload
     }
   } = route;
-  let { query } = req;
+  let { query, body: requestBody, url } = req;
+
   configForwardMode = configForwardMode.toLowerCase();
   
   if (configForwardMode == "all" || (routeForwardEnabled && configForwardMode == "custom")) {
     let reqPayload = {
-      payload,
+      payload:(requestBody || routePayload),
       query,
       headers: !isEmpty(routeForwardHeaders) ? routeForwardHeaders : configForwardHeaders
     };
 
-    //console.log("reqPayload", reqPayload);
-
     let hostname = !isEmpty(routeForwardHostname) ? routeForwardHostname : configForwardHostname;
-    apiUtil(method, path, reqPayload, hostname)
+    apiUtil(method, url, reqPayload, hostname)
       .then(response => {
         console.log("*************** success response ***************");
         console.log("forwarded path", hostname + path);
@@ -47,6 +46,7 @@ const forwardRequest = config => route => (req, res, next) => {
       .catch(err => {
         console.log("************* error has occurred **********************");
         console.log("forwarded path", hostname + path);
+        console.log("request payload", JSON.stringify(reqPayload));
         console.log("status code", err.status);
         console.log("error response body", err.response.body);
 
