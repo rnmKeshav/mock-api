@@ -6,7 +6,7 @@ let setHeader = require("./middlewares/set_headers");
 let forwardRequest = require("./middlewares/forward_request");
 let callRouteAction = require("./middlewares/call_route_action");
 
-let defaultConfig = require("./default_config");
+let buildConfig = require("../build_config");
 
 let server = express();
 
@@ -42,7 +42,8 @@ server.use(bodyParser.json());
 // ];
 
 const createServer = config => {
-  let { port = defaultConfig.port, routes = [] } = config;
+  config = buildConfig(config);
+  let { port, routes = [] } = config;
   let forwardRequestWithConfig = forwardRequest(config);
 
   routes.forEach(function(currentRoute) {

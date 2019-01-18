@@ -1,6 +1,10 @@
-const isEmpty = function(obj) {
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
+const isEmpty = function(payload) {
+  if (payload && typeof payload !== 'object') {
+    return false;
+  }
+
+  for (let key in payload) {
+    if (payload.hasOwnProperty(key)) {
       return false;
     }
   }

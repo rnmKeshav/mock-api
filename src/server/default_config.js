@@ -2,7 +2,7 @@ module.exports = {
   port: 6001,
   routes_path: "",
   forward: {
-    mode: "custom", //all, custom, none
+    mode: "", //all, custom, none
     hostname: "https://www.practo.com",
     headers: {
       accept: "application/json",
