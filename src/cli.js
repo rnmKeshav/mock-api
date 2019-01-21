@@ -1,4 +1,4 @@
-#!/usr/bin/env nodemon
+#!/usr/bin/env node
 
 /*
   for permission run "chmod +x cli.js "

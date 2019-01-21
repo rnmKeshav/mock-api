@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "mock-api": "./src/cli.js"
+    "mock-api": "./src/cli.js",
+    "generate-scaffold": "./src/scaffolding.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "body-parser": "1.18.3",
     "cors": "2.8.5",
     "express": "4.16.4",
+    "ncp": "2.0.0",
     "superagent": "4.0.0",
     "yargs": "12.0.5"
   },
