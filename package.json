@@ -8,7 +8,7 @@
   },
   "bin": {
     "mock-api": "./src/cli.js",
-    "generate-scaffold": "./src/scaffolding.js"
+    "mock-api scaffold": "./src/scaffolding.js"
   },
   "author": "",
   "license": "ISC",

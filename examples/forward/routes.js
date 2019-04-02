@@ -79,6 +79,14 @@ const routes = [
         enabled: true
       }
     }
+  },{
+    request: {
+      path: "/wave/reviewcontexts/decencychecks",
+      method: "POST",
+      forward: {
+        enabled: true
+      }
+    }
   },
   {
     request: {
@@ -115,6 +123,23 @@ const routes = [
       forward: {
         enabled: true
       }
+    }
+  },{
+    request: {
+      path: "/marketplace-api/dweb/profile/provider/relation",
+      method: "GET",
+      forward: {
+        enabled: true
+      }
+    }
+  },
+  {
+    request: {
+      path: "/marketplace-api/public/provider/:doctorUuid/establishment/:practiceUuid",
+      method: "GET"
+    },
+    response: {
+      data: {"prime":[{"prime_text":"Max. 15 mins wait + Verified details","prime_enabled_class":"","prime_disabled_class":"u-hide"}],"availability":[{"text":"Available Today","availability_class":"u-bold u-cushion--small-top u-green-text"}],"cashback":[{"amount":0,"cashback_hidden_class":"u-hide"}]}
     }
   }
 ];

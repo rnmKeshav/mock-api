@@ -56,6 +56,7 @@ const createServer = config => {
       setHeader(currentRoute),
       function(req, res) {
         let { response: { data } = {} } = currentRoute;
+        
         let responseData = res.locals.customResponse || data;
 
         res.json(responseData);
