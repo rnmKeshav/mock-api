@@ -1,3 +1,5 @@
+let path = require("path");
+
 function getExtraHeader() {
   return {
     "X-API-TOKEN": "XXXXXXXX"
@@ -19,7 +21,7 @@ let headers = {
 
 module.exports = {
   port: 6001,
-  routes_path: "./routes.js",
+  routes_path: path.resolve(__dirname, "./routes.js"),
   forward: {
     mode: "custom", //all, custom, none
     hostname: "https://www-latest.practo.com",

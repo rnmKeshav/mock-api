@@ -16,12 +16,10 @@ const buildConfig = (config = {}) => {
   if (routes_path) {
     console.log("Route Path recieved: ", routes_path);
 
-    let routesPath = path.join(basePath, routes_path);
-    if (fs.existsSync(routesPath)) {
-      console.log("Route Found file: ", routesPath);
-      config.routes = require(routesPath);
+    if (fs.existsSync(routes_path)) {
+      config.routes = require(routes_path);
     } else {
-      console.error("Cannot find route file: ", routesPath);
+      console.error("Cannot find route file: ", routes_path);
       process.exit(1);
     }
   } else {
