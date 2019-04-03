@@ -1,7 +1,9 @@
+var path = require("path");
+
 module.exports = {
-  routes_path: "./routes.js",
+  routes_path: path.resolve(__dirname, "./routes.js"),
   forward: {
-    mode: "custom",
+    mode: "custom", // Custom means forwarding enabled route would be forwarded to given hostname, others will be served from local data.
     hostname: "https://www.practo.com", // Generic hostname where you want to forward your request
     headers: {  // Copy all headers required to make an API call to this hostname
       accept: "application/json",
