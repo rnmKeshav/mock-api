@@ -27,9 +27,11 @@ const forwardRequest = config => route => (req, res, next) => {
   configForwardMode = configForwardMode.toLowerCase();
   
   if (configForwardMode == "all" || (routeForwardEnabled && configForwardMode == "custom")) {
+    let customHeaders = !isEmpty(routeForwardHeaders) ? routeForwardHeaders : configForwardHeaders;
+    let headers = Object.assign({}, customHeaders);
     let reqPayload = {
       payload:(requestBody || routePayload),
-      headers: !isEmpty(routeForwardHeaders) ? routeForwardHeaders : configForwardHeaders
+      headers 
     };
 
     let hostname = !isEmpty(routeForwardHostname) ? routeForwardHostname : configForwardHostname;
@@ -47,9 +49,9 @@ const forwardRequest = config => route => (req, res, next) => {
         console.log("forwarded path", hostname + originalUrl);
         console.log("request payload", JSON.stringify(reqPayload));
         console.log("status code", err.status);
-        console.log("error response body", err.response.body);
+        console.log("error response body", err.response && err.response.body);
 
-        res.locals.customResponse = err.response.body;
+        res.locals.customResponse = err.response && err.response.body;
         res.locals.headers = { status: err.status };
 
         next();

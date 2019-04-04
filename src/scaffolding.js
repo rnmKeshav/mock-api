@@ -4,7 +4,7 @@ var ncp = require('ncp').ncp;
 const path = require("path");
 const yargs = require("yargs");
 
-const basePath = process.cwd();
+const basePath = process.env.INIT_CWD;
 
 // run mock-api-scaffold --folder_name="desired_folder_name"
 
