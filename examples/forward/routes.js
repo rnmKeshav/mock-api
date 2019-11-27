@@ -67,8 +67,11 @@ const routes = [
       path: "/feedback/phone-number",
       method: "GET",
       forward: {
-        enabled: true
+        enabled: false
       }
+    },
+    response: {
+      success: true
     }
   },
   {
@@ -102,6 +105,34 @@ const routes = [
       method: "PATCH",
       forward: {
         enabled: true
+      }
+    }
+  },
+
+  {
+    request: {
+      path: "/wave/sendotp",
+      method: "POST",
+      forward: {
+        enabled: true
+      }
+    },
+    response: {
+      data:{
+        success: true
+      }
+    }
+  },{
+    request: {
+      path: "/wave/verifyotp",
+      method: "POST",
+      forward: {
+        enabled: true
+      }
+    },
+    response: {
+      data:{
+        success: true
       }
     }
   },

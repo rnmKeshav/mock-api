@@ -50,6 +50,7 @@ const forwardRequest = config => route => (req, res, next) => {
         console.log("request payload", JSON.stringify(reqPayload));
         console.log("status code", err.status);
         console.log("error response body", err.response && err.response.body);
+        console.log("err", err);
 
         res.locals.customResponse = err.response && err.response.body;
         res.locals.headers = { status: err.status };
