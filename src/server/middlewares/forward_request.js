@@ -18,23 +18,25 @@ const forwardRequest = config => route => (req, res, next) => {
         headers: routeForwardHeaders
       } = {},
       path,
-      method,
+      method: route_method,
       payload: routePayload
-    }
+    } = {}
   } = route;
-  let { body: requestBody, originalUrl } = req;
+  let { body: requestBody, originalUrl, method: req_method } = req;
 
   configForwardMode = configForwardMode.toLowerCase();
   
-  if (configForwardMode == "all" || (routeForwardEnabled && configForwardMode == "custom")) {
+  if (configForwardMode == "all" || (routeForwardEnabled && configForwardMode == "custom") || ((typeof routeForwardEnabled==="undefined") && (configForwardMode == "custom"))) {
     let customHeaders = !isEmpty(routeForwardHeaders) ? routeForwardHeaders : configForwardHeaders;
     let headers = Object.assign({}, customHeaders);
     let reqPayload = {
       payload:(requestBody || routePayload),
       headers 
     };
-
+    let method = route_method || req_method;
+    
     let hostname = !isEmpty(routeForwardHostname) ? routeForwardHostname : configForwardHostname;
+
     apiUtil(method, originalUrl, reqPayload, hostname)
       .then(response => {
         console.log("*************** success response ***************");
@@ -45,12 +47,12 @@ const forwardRequest = config => route => (req, res, next) => {
         next();
       })
       .catch(err => {
-        console.log("************* error has occurred **********************");
-        console.log("forwarded path", hostname + originalUrl);
-        console.log("request payload", JSON.stringify(reqPayload));
-        console.log("status code", err.status);
-        console.log("error response body", err.response && err.response.body);
-        console.log("err", err);
+        console.error("************* error has occurred **********************");
+        console.info("forwarded path", hostname + originalUrl);
+        console.info("request payload", JSON.stringify(reqPayload));
+        console.info("status code", err.status);
+        console.info("error response body", err.response && err.response.body);
+        console.error("err", err);
 
         res.locals.customResponse = err.response && err.response.body;
         res.locals.headers = { status: err.status };

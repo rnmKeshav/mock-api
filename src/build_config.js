@@ -8,13 +8,13 @@ const basePath = process.cwd();
 
 const buildConfig = (config = {}) => {
   if (isEmpty(config)) {
-    console.error("Config not found. Using defaults");
+    console.info("Config not found. Using defaults");
     config = defaultConfig;
   }
 
   let routes_path = config.routes_path;
   if (routes_path) {
-    console.log("Route Path recieved: ", routes_path);
+    console.info("Route Path received: ", routes_path);
 
     if (fs.existsSync(routes_path)) {
       config.routes = require(routes_path);

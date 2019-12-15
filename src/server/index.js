@@ -45,7 +45,7 @@ const createServer = config => {
   config = buildConfig(config);
   let { port, routes = [] } = config;
   let forwardRequestWithConfig = forwardRequest(config);
-
+ 
   routes.forEach(function(currentRoute) {
     let { request: { path, method = "get" } = {} } = currentRoute;
 
@@ -56,13 +56,25 @@ const createServer = config => {
       setHeader(currentRoute),
       function(req, res) {
         let { response: { data } = {} } = currentRoute;
-        
         let responseData = res.locals.customResponse || data;
 
         res.json(responseData);
       }
     );
   });
+
+  
+    server.all(
+      "/*",
+      forwardRequestWithConfig({}),
+      setHeader({}),
+      function(req, res, next) {
+        let responseData = res.locals.customResponse;
+        
+        res.json(responseData);
+        next();
+      }
+    )
 
   server.listen(port, function() {
     console.log("Server running at port:", port);

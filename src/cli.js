@@ -30,13 +30,15 @@ let cliConfig = {};
 if (argv.config) {
   let configPath = path.join(basePath, argv.c);
   if (fs.existsSync(configPath)) {
-    console.log("Config file path:", configPath);
+    console.info("Config file path:", configPath);
     cliConfig = require(configPath);
+  } else {
+    console.error("Config path provided is not available", configPath);
   }
 }
 
 if (argv.routes) {
-  console.log("Routes path received", argv.routes);
+  console.info("Routes path received", argv.routes);
 
   cliConfig.routes_path = argv.routes;
 }
