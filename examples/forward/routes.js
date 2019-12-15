@@ -71,7 +71,9 @@ const routes = [
       }
     },
     response: {
-      success: true
+      data: {
+        success: true
+      }
     }
   },
   {
