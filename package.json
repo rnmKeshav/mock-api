@@ -8,8 +8,8 @@
     "start": "nodemon src/server/index.js"
   },
   "bin": {
-    "mock-api": "./src/cli.js",
-    "mock-api-scaffold": "./src/scaffolding.js"
+    "mock-api-init": "./src/cli.js",
+    "mock-api": "node ./src/server/cli.js"
   },
   "author": "",
   "license": "ISC",

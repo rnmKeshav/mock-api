@@ -17,13 +17,20 @@ const networkCall = function (parameters) {
     .send(payload)
     .query(query)
     .then(function (response_data) {
+      console.debug(JSON.stringify({method, constructed_url, payload, query}));
+      
       resolve(response_data.body);
     })
     .catch(function (err) {
       console.debug(JSON.stringify({method, constructed_url, payload, query, headers}))
-      console.debug("err", err)
+      let error_text = err.response && err.response.text;
+      let error_status = err.status;
+      if (!error_text || !error_status) {
+        console.debug("err", err);
+        reject();
+      };
       reject({
-        text: err.response && err.response.text,
+        text: error_text,
         status: err.status
       })
 
