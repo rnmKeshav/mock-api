@@ -1,6 +1,11 @@
+#!/usr/bin/env node
+
+
+// This file is not getting used currently. Dummy file to remind about auto script running from package.json to use local nodemon
+
 const { spawn } = require("child_process");
 
-const ls = spawn("npm", ["start"]);
+const ls = spawn("ls", ["-al"]);
 
 ls.stdout.on("data", data => {
     console.log(`stdout: ${data}`);

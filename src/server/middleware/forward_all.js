@@ -13,7 +13,7 @@ const forwardAll = function (req, res, next) {
         response_data
       })
     }).catch(function (data){
-
+      console.log("data", data)
       Object.assign(res.locals, {
         error_data: data
       })

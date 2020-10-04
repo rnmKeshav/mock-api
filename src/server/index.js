@@ -1,4 +1,4 @@
-// #!/usr/bin/env nodemon
+#!/usr/bin/env nodemon
 
 let express = require("express");
 const fs = require("fs");
@@ -34,7 +34,10 @@ const argv = yargs.options({
 }).argv;
 
 const cwd = process.cwd();
-let config = {};
+let config = {
+  port: 3000,
+  forward: {}
+};
 
 if (argv.config) {
   let configPath = path.join(cwd, argv.c);

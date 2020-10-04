@@ -18,7 +18,6 @@ const networkCall = function (parameters) {
     .query(query)
     .then(function (response_data) {
       console.debug(JSON.stringify({method, constructed_url, payload, query}));
-      
       resolve(response_data.body);
     })
     .catch(function (err) {
