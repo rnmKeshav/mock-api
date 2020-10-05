@@ -2,13 +2,14 @@
 
 const { exec } = require("child_process");
 const path = require("path");
+const fs = require("fs");
 var ncp = require('ncp').ncp;
+
 
 const cwd = process.cwd();
 
 const source = path.join(__dirname, "./mock-api.config.default.js");
 const destination = path.join(cwd, "mock-api.config.js");
-
 
 exec("nodemon -v", function (err, stdout) {
   let is_nodemon_installed = false;
@@ -35,11 +36,33 @@ exec("nodemon -v", function (err, stdout) {
 })
 
 
-ncp.limit = 16;
-ncp(source, destination, function (err) {
- if (err) {
-  return console.error(err);
- }
+if (!fs.existsSync(destination)) {
 
- console.info("config file created!");
-});
+  console.log("Config file does not exist. Creating one...")
+  ncp.limit = 16;
+  ncp(source, destination, function (err) {
+  if (err) {
+    return console.error(err);
+  }
+
+  console.info("config file created!");
+  });
+
+} else {
+  console.info("Config file already exist", destination);
+}
+
+/*
+const package_json_path = path.join(cwd, "package.json");
+let package_json  = require(package_json_path);
+if (package_json) {
+  Object.assign(package_json.scripts, {
+    "mock-api": "mock-api"
+  });
+
+  fs.writeFileSync(package_json_path, JSON.stringify(package_json));
+
+  console.log("Updated package.json. Run 'npm run mock-api' in terminal")
+}
+
+*/
