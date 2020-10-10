@@ -14,11 +14,12 @@ const handleCustomRoute = function (route) {
       }
       next();
     } else {
-      let {app: {locals: {config}}, method, headers: req_headers, query: req_query} = req;
+      let {app: {locals: {config}}, method, headers: req_headers, query: req_query, body} = req;
       let {hostname: config_hostname, headers: config_headers} = config;
-      let {path, hostname = config_hostname, headers: custom_headers, payload, query: custom_query} = request;
+      let {path, hostname = config_hostname, headers: custom_headers, payload: custom_payload, query: custom_query} = request;
       let headers = Object.assign({}, req_headers, config_headers, custom_headers);
       let query = Object.assign({}, req_query, custom_query);
+      let payload = Object.assign({}, body, custom_payload);
 
       networkCall({url: path, method, headers, hostname, query, payload})
         .then(function (response_data) {

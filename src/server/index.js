@@ -99,7 +99,7 @@ if (config && config.routes) {
   config.routes.forEach(function (route) {
     let {request = {}, response = {}} = route;
     let {path, method} = request;
-    method = method.toLowerCase();
+    method = method.toLowerCase() || "get";
     
     app[method](path,  insertConfig(config), handleCustomRoute(route), function (req, res) {
 
