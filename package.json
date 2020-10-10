@@ -8,7 +8,7 @@
     "start": "nodemon src/server/index.js"
   },
   "bin": {
-    "mock-api-init": "./src/setup_cli.js",
+    "mock-api-setup": "./src/setup_cli.js",
     "mock-api": "./src/server/index.js"
   },
   "author": "",

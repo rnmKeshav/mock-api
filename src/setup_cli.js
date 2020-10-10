@@ -53,6 +53,9 @@ if (!fs.existsSync(destination)) {
 }
 
 /*
+
+// To automatically add mock-api in script of package.json.
+ 
 const package_json_path = path.join(cwd, "package.json");
 let package_json  = require(package_json_path);
 if (package_json) {
