@@ -3,24 +3,26 @@ let networkCall = require("../network_call");
 const handleCustomRoute = function (route) {
   return function (req, res, next) {
     let {enable_forward, request = {}, response = {}} = route;
+    let {params, body} = req;
 
     if (request.beforeRequest) {
       request.beforeRequest();
     }
 
+    // The callback function receives request's params and body. 
     if (!enable_forward) {
       if (response.beforeResponse) {
-        response.beforeResponse();
+        response.beforeResponse({params, body});
       }
       next();
     } else {
-      let {app: {locals: {config}}, method, headers: req_headers, query: req_query, body} = req;
-      let {hostname: config_hostname, headers: config_headers} = config;
+      let {app: {locals: {config}}, method, headers: req_headers, query: req_query} = req;
+      let {hostname: config_hostname, headers: config_headers} = config.forward;
       let {path, hostname = config_hostname, headers: custom_headers, payload: custom_payload, query: custom_query} = request;
       let headers = Object.assign({}, req_headers, config_headers, custom_headers);
       let query = Object.assign({}, req_query, custom_query);
       let payload = Object.assign({}, body, custom_payload);
-
+      
       networkCall({url: path, method, headers, hostname, query, payload})
         .then(function (response_data) {
           
@@ -35,8 +37,9 @@ const handleCustomRoute = function (route) {
           })
         })
         .finally(function () {
+          // The callback function receives request's params and body. 
           if (response.beforeResponse) {
-            response.beforeResponse();
+            response.beforeResponse({params, body});
           }
           next();
         })

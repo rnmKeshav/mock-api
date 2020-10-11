@@ -20,6 +20,7 @@ let config = {
       },
       hostname:"https://api.github.com/", // This will override config.forward.hostname
       payload: {},  // Payload to send to server for this API call
+      query: {}, // query param to send to server for this API call
       beforeRequest: function () {
         // This gets called before network request
         // This method can change request object.
@@ -31,7 +32,7 @@ let config = {
       },
       status: "", // Can be used to override response status code
       response_data: {},  // This is where response data is placed when API call succeeds.
-      beforeResponse: function () {
+      beforeResponse: function ({params}) {
         // This method gets called after network request
         // This method can change response object
       }

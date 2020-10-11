@@ -99,10 +99,13 @@ if (config && config.routes) {
   config.routes.forEach(function (route) {
     let {request = {}, response = {}} = route;
     let {path, method} = request;
-    method = method.toLowerCase() || "get";
+    method = (method || "get").toLowerCase();
     
-    app[method](path,  insertConfig(config), handleCustomRoute(route), function (req, res) {
+    if (!path) {
+      return;
+    }
 
+    app[method](`${path}`,  insertConfig(config), handleCustomRoute(route), function (req, res) {
       if (!_isEmpty(res.locals.error_data)) {
         let {status, text} = res.locals.error_data;
         
@@ -125,6 +128,13 @@ if (config && config.routes) {
     })
   })
 }
+
+// console.log("All registered routes");
+// app._router.stack.forEach(function(r){
+//   if (r.route && r.route.path){
+//     console.log(r.route.path)
+//   }
+// })
 
 if (config) {
   app.all("*", insertConfig(config), forwardAll, function (req, res) {
