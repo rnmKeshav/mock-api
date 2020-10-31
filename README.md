@@ -167,4 +167,7 @@ This object is used to manipulate response for custom route of `path` mentioned 
  response_data | Response data you want from this request. This object gets populated as soon as `mock-api` gets response from your custom request server. | { }
  beforeResponse | Function | A callback function which gets called after `mock-api` gets response from your custom request. This function gets called after populating data in `response_data` with parameters as request's `params` and `body`.  | noop
 
- 
+#### Examples
+[Example 1](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-all)
+
+[Example 2](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-custom)
