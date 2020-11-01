@@ -1,7 +1,7 @@
 {
   "name": "mock-api",
   "version": "1.0.1",
-  "description": "",
+  "description": "A fake API server for all type of frontend development",
   "main": "src/server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -25,5 +25,31 @@
   "devDependencies": {
     "nodemon": "2.0.4",
     "prettier": "1.15.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rnmKeshav/mock-api.git"
+  },
+  "keywords": [
+    "JSON",
+    "proxy",
+    "server",
+    "fake",
+    "REST",
+    "API",
+    "POST",
+    "forwarding",
+    "prototyping",
+    "mock",
+    "mocking",
+    "test",
+    "testing",
+    "rest",
+    "data",
+    "dummy",
+    "sandbox"
+  ],
+  "engines": {
+    "node": ">=10"
   }
 }
