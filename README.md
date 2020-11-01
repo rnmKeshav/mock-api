@@ -13,7 +13,7 @@ An easy and configurable mock server.
 ### Install
 
 ```
-npm install git@github.com:rnmKeshav/mock-api.git
+npm i --save-dev @rnmkeshav/mock-api
 ```
 
 ### Setup

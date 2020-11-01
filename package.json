@@ -1,5 +1,5 @@
 {
-  "name": "mock-api",
+  "name": "@rnmkeshav/mock-api",
   "version": "1.0.1",
   "description": "A fake API server for all type of frontend development",
   "main": "src/server/index.js",
