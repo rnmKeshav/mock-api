@@ -1,413 +1,173 @@
-# Mock-api
-An easy and configurable mock-server.
+# Mock-API
+An easy and configurable mock server.
 
 ## Features
- - [x] A fake REST API data server :smirk:
- - [x] Can configure response status :smiley:
- - [x] Can modify response data according to request :confused: 
- - [x] Can forward request and fetch data from other data services :relieved:
+ - [x] A fake REST API data server :smiley:
+ - [x] Acts as proxy server. Can forward request and fetch data from other data services :relieved:
 
 ### Points
- 1. As a frontend developer, we mostly care how we `make our request`, `what data to send` and what's the response of it i.e) what was `response data`, `status code` etc. to handle post request process which is mostly whether `error occurred` or was the `request successful`. We might not care if the data got inserted into the database or not.
+ 1. Helps in `POST` request to your server from anywhere, even from `localhost`
+ 2. Fixes `CORS` issue.
+ 3. We can make request to authenticated API.
 
- 2. We often want to `run our code in local machine with production data`. This can be because of various reasons like debugging, fixing bugs, development when back-end team is unavailable to provide response structure etc.
+### Install
 
-## What you will need to run `mock-api`
- 1. **installation**
- 2. **A Route file**
- 3. A config file to tell `mock-api` about it's configuration and other parameters
-
-> mock-api in the background runs an express server. It takes routes provided to construct paths and some configurations (like port) to setup and run the server.  
-
-#### Install mock-api server
-
-#### Route file
-A simple `javascript` file to hold all information about routes you are trying to mock.
-This file exports an `array of objects`. Each object consists of information about particular route.
-Example:
-```javascript
-#routes.js
-module.exports = [
-  {
-    request: { // Details regarding API request you are making
-      path: "/users",
-      method: "get"
-    },
-    response: { // Details regarding API response for requested path we want   
-      data: {
-        id: 5145606,
-        account_id: "12345",
-        email: "keshav.xxx@gmail.com",
-        name: "Keshav Kumar",
-        phone_number: "+919008xx1555",
-        country: "IN"
-      }
-    }
-  }
-]
 ```
-We will discuss about route file and it's object structure later.
-
-#### Config file
-A `javascript` file to hold all configurations required to run the server. This file exports an object, the properties of which is used to customize `mock-api` server. This is not mandatory until you are using forwarding feature.
-
-#### Start mock-server
-mock-server -r=routes.js
-
-> If you see error, please check route object structure and config below. 
-
-
-## Routes detail
-
-A file which exports array of objects(routes). 
-The route object has all the details. There are three property of route object.
-1. **request**
-2. **response**
-3. **action**
-
-Lets see details of these properties:
-### 1. request(mandatory)
-This object contains all details about the request we make while making API call.
-
-#### Properties of `request`
-
-Property | Details
--------- | ------- 
-path | Endpoint which we want to mock. Same as `express.js` [path](https://expressjs.com/en/guide/routing.html). 
-method | Request method. Any of `GET`, `POST`, `PATCH`, `DELETE` etc.
-forward | An object used when we want to forward(redirect) request for current path to some other service to fetch response instead of using local(mocked) data. We will discuss this in details later.
-
-Example 1: 
-Problem: Make a request to `get` users data whose route is `www.yourdomain.name/users.json`.
-Solution: While mocking api, we will be replacing our `hostname` with `localhost:port`. Lets assume `mock-api` server runs on port 6001. So our request will convert
-`www.yourdomain.name/users.json` => `localhost:3000/users.json`
-
-Hence, request object for this request will be:
-```javascript
-  request: {
-    path: "/users.json",
-    method: "GET"
-  }
+npm install git@github.com:rnmKeshav/mock-api.git
 ```
 
+### Setup
 
-### 2. response
-An object which contains all details about how we want our response to look like.
+Step 1:
 
-#### Properties of `response`
-
-Property | Details
--------- | -------
-data | Response we want when we make calls to current route path. This can be object, string or whatever format our API call is expected to return. 
-headers| An object of response headers we want to set. To set status code of response to be 201, we can set `headers: {status: 201}`
-
-**Note** If forwarding is enabled, response returned from the forwarded service will be returned to callee. Hence `response.data` from current `response` object will be overridden.
-
-Example: For above example, lets say we want to respond with `responseData` and set a header `X_API_TOKEN`.
+To run mock-api you will need a config file. This can be created with running below command in terminal 
 ```
-let responseData = [{
-  id: 5145606,
-  account_id: "12345",
-  email: "keshav.xxx@gmail.com",
-  name: "Keshav Kumar",
-  phone_number: "+919008xx1555",
-  country: "IN"
-}, {
-  id: 514243,
-  account_id: "12334",
-  email: "amit.xxx@gmail.com",
-  name: "Amit Ranjan",
-  phone_number: "+1xxxx1555",
-  country: "US"
-}]
+npx mock-api-setup
 ```
 
-Hence, response object for above requirement will be
-```javascript
-  response: {
-    data: responseData,
-    headers: {
-      status: 200,
-      X_API_TOKEN: "309rhnfdgjhbfg43e"
-    }
-  }
+Step 2:
+```
+npx mock-api
 ```
 
-### 3. action method
-A function which gets called when we access current route's object path.
-`action` method has it's `this` context set to current route object. Hence we can access our `response` object, and modify it as per our need.
-This function gets called with an object as argument.
+<h6 align="center">or</h6>
 
-Properties of object passed as arguments to `action` method
-
-Property | Details
----------| -------
-params | Contains route parameters if passed.
-data | Contains data passed while making POST/PATCH/DELETE etc calls.
-query | Contains query parameters of request
-
-Example: Extending previous example, lets say we want to filter and want user whose country is india(IN) which we will pass in route's query parameter. 
-
-```javascript
-#routes.js
-
-let routes = [{
-  request: {
-    path: "/users",
-    method: "GET"
-  },
-  response: responseData,
-  action: function(payload) {
-    let query = payload.query;
-
-    this.response.data = this.response.data.filter(currentUser => {
-      currentUser.country == query.country;
-    });
-  }
-}];
+Add npm script in your `package.json` file.
+```
+"scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "mock-api": "mock-api"
+}
 ```
 
-When we access `localhost:6001/users?country=IN`, in response we will get
-```javascript
-[{
-  id: 5145606,
-  account_id: "12345",
-  email: "keshav.xxx@gmail.com",
-  name: "Keshav Kumar",
-  phone_number: "+919008xx1555",
-  country: "IN"
-}]
+Run `mock-api` from terminal.
+
 ```
-## Config file details
-A simple javascript file exporting config object.
+npm run mock-api
+```
 
-Though this file is not mandatory upto certain extent, it's recommended to create one. 
-Default filename for the file is `mock-api.config.js` and is expected at the root of project.
-For whatever reason you don't want to create `mock-api.config.js` in the root, you can keep it wherever you want with path to file passed as argument while runing `mock-api`.
+### Testing
 
-`mock-api -c=path/to/mock-api/config.js`
+Open browser and hit `http://localhost:3002/photos/1`
 
-Properties of config object.
+### How mock-api works
+_This package usage `express` to create a proxy server. It takes your request, checks request method and url passes it through some middleware. It is these middleware which calls `route.beforeRequest` before making request and pick `route.payload`(more on this later) to make api call to your service. Middleware also puts response from your service(provided `hostname` in config/route) to `routes.response_data` and calls `routes.beforeResponse()` before sending response back to client. Middleware usage config file to create and manipulate request/response._ 
 
-Properies | Type  | Default | Details
-----------|------ | ------ | -------
-port | Number | 6001 | Port at which you want to run `mock-api` server
-routes_path | String | `./routes.js` | Path to route file
-forward | Object | {} | An object required for request forwarding.
 
-Note: We will discuss about forward object shortly.
+## config file details
 
-## Request Forwarding
-Using `mock-api` server, we can forward any request coming to this server to any third-party service and return back response from third-party service to client.
+To run `mock-api`, config(`mock-api.config.js`) file is mandatory. This config file gets created by running `npx mock-api-setup` but can also be created manually. This is plain javascript file which exports an object.
 
- >  Client ===> Mock-api Server ===> Third-party Server ===> Mock-api Server ===> Back to Client
+**You will be manipulating this file to achieve all your desired result and fake/forward api responses.**
 
-Forwarding is very helful when we want to run our application with third-party data but can't achieve from client(browser/localhost) directly due to various reasons like CORS, authentication etc.
-
-To achieve route forwarding, we need to provide some configurations to `mock-api`. There are two ways configure forwarding.
- 1. Generic forwarding
- 2. Individual or custom forwarding
-
-### 1. Generic forwarding
-This type of request forwarding would be applicable to all routes defined in `routes.js` file. This is achieved using config file `mock-api.config.js`. This config file, exports an config object with `forward` propery in it which itself is an object. 
-
-**`forward` object holds data required for route forwarding**
-
-Properties of `forward` object:
- 
-Properties | Type | Details
------------| --------- | ------
-mode | String | all, custom, none. Discussed in detail below.
-hostname | String | Third-party service hostname where the request would be forwarded to. Ex: Your prod server hostname.
-headers | Object| Headers required by third party service to make api-calls.
-
-There are various modes of forwarding in `mock-api`
-
-Mode | Details | Motivation
------| ------ | -----------
-All | Forwards all calls. | We want to replicate entire application with third-party(prod) data.
-Custom | Forward only enabled routes. | Want to run application with some data coming from third-party source while rest from mock server. Individual route forwarding.
-None | Disable all forwardings. | Want to run application with mock-server data.
-
-Example: Run application with `www.practo.com` as data source. We also need to fetch logged in data.
-
-To achieve this, we need to log into `www.practo.com` and copy headers and cookie set by website and paste into our config file.
-
-```Javascript
 #mock-api.config.js
 
-module.exports = {
-  port: 4000,
-  routes_path: "./mock-server/routes.js",
+```
+let config = {
+  port: 3002,
   forward: {
-    mode: "all",
-    hostname: "https://www.practo.com",
-    headers: {
+    hostname: "https://jsonplaceholder.typicode.com/",  // hostname where request will be forwarded. This will be fallback for custom route.
+    headers: {  // headers to be sent in all requests.
+      cookie: "Hello=world;sdn=1", // cookie you would like to send as header when making request to your server(mentioned in hostname)
+      host: "jsonplaceholder.typicode.com",
       accept: "application/json",
-      "accept-encoding": "gzip, deflate, br",
-      "accept-language": "en,pt-BR;q=0.9,pt;q=0.8,id;q=0.7,en-US;q=0.6,la;q=0.5",
-      cookie:"_abc=xxxxxxx;sso=dkfgirhjdfvjfd4345dkfdfj",
-      referer: "https://www.practo.com/partners/doctor/687092/edit/awa_mem",
-      "user-agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+      referer: "https://jsonplaceholder.typicode.com/",
+      "accept-encoding": "gzip"
     }
-  }
+  },
+  routes: [{  // custom routes if you want to modify request payload or response data. This can also be used to override request/response default data(headers/status) mentioned above in config.forward
+    enable_forward: true, // true means request would be forwarded to routes.request.hostname if mentioned otherwise fallback to config.forward.hostname. false means api would be returning route.response.response_data
+    request: {  // request object details. 
+      path: "/search/users",  // route path for which this object will come into force.
+      method: "GET",
+      headers: {  // This will override config.forward.headers
+        Host: "api.github.com"
+      },
+      hostname:"https://api.github.com/", // This will override config.forward.hostname
+      payload: {},  // Payload to send to server for this API call
+      beforeRequest: function () {
+        // This gets called before network request
+        // This method can change request object.
+      }
+    },
+    response: {
+      headers: {  // Can be used to override response header.
+        "custom_response_header": "custom_response_header_value"
+      },
+      status: "", // Can be used to override response status code
+      response_data: {},  // This is where response data is placed when API call succeeds.
+      beforeResponse: function () {
+        // This method gets called after network request
+        // This method can change response object
+      }
+    }
+  }]
 }
+
+module.exports = config;
 ```
 
-We decided to keep our `routes.js` inside `mock-server` folder. 
+Property | Type | Details | Default
+-------- | ------- | ------- | -------
+port | Number | Port on which mock-api server runs. | 3002
+forward | Object | An object which contain details about request where data will be forwarded. Details of this object can be found below. | { }
+routes | Array | An array which holds detail of each route where you want to do some manipulation in request or response object. | [ ]
 
-```Javascript
-#./mock-server/routes.js
 
-modules.exports = [
-  {
-    request: {
-      path: "/user",
-      method: "GET"
-    }
-  }
-]
-```
+### Forward object details
+An object which help build request object to send to different service. 
+ > In this document this object is also referred as `config.forward` object  
 
-### 2. Custom forwarding
-With `mock-api` we can forward some route to fetch data from third-party service while others to keep responding with saved mock data.
-This is done with help of individual route defined in `routes.js` file. A route object has three properties, namely `request, response, action`. 
+Property | Type | Details | Default
+------- | ------- | -------- | --------
+hostname | String | hostname of the url where you want to forward all your request to. | "https://jsonplaceholder.typicode.com/"
+headers | Object | An object which contains any headers data you want to send in your request. This can be used to send `cookie` to an authentication protected API | { }
 
-For individual route forwarding, we use route's `request.forward` property along with config file's `forward.mode` property set to `custom`.
 
-Properties of `request.forward` in details
+### route object details
 
-Properties | Type | Details
------------| ---- | -------
-enabled | boolean | Sets whether to enable forwarding for this route.
-hostname| string | Sets third-party hostname where this particular route would be forwarded to.
-headers | Object | Headers required by third party service to make this api-call.
+This makes custom route request. `route` property of config(`mock-api.config.js`) is an array of object which contains individual route details.
+An object which you can use to let `mock-api` know you want to perform some manipulation with request or response data.
 
-Note: Route's `request.forward` simply overrides config's forward properties. If you have same property specified at both places, `request.forward` would take preference for that particular route.
+ > In this document this object is also referred as `config.route` object
 
-Note 2: Route's `request.forward.enabled` property is just a toggle switch which works only when config's `forward.mode` is set to `custom`. Otherwise this is ignored.
+Property | Type | Details | Default
+------- | ------- | ------- | -------
+enable_forward | Boolean | This flag tells `mock-api` that should it forward the request for mentioned `path` or not. | False
+request | Object | This object tells request details which will be used for `request.path` url. We can use this object to modify POST payload, query params, headers sent to service etc. | { }  
+response | Object | This object tells response details which will be used for `request.path` url. We can use this object to modify response data, response headers, status codes etc. | { }
 
-Forwarding table to consider
+#### Route's request object
 
-config.forward.mode | request.forward.enabled | outcome
-------------| ------------------------|---------
-all | true | true
-all | false | true
-custom | true | true
-custom | false | false
-none | true | false
-none | false | false
+By default all request adheres `config.forward` object to construct request's hostname, headers etc. This object overrides default behavior and tells `mock-api` to use this object to construct a custom request object for mentioned `path`.
 
-#### Example: Write a mock-server which serves data from different sources for different routes.
-Details of routes given below:
+ > In this document this object is also referred as `config.route.request` object
 
-Route | Source 
-------| ------
-`/users` | mock server or Local data
-`/logged_in_user` | `www.practo.com`
-`/users/1 | `www.practo.com`
-`/search/users` | `api.github.com`
+Property | Type | Details | Default
+------- | ------- | ------- | -------
+path | String | A url path for which you want to manipulate your request or response and create a custom request. Same as express.js [path](https://expressjs.com/en/guide/routing.html) | ""
+method | String | Method for custom request's path | GET
+headers | Object | Header object which will be sent when you make request to this custom request's `path` | `config.forward.headers`
+hostname | String | Hostname for custom request. This when specified overrides `config.forward.hostname` | undefined
+payload | Object | This object gets merged with your client's(browser) POST request's body to construct final payload and sent to mentioned `path` in custom request. | { }
+query | Object | Query param to send with request | { }
+beforeRequest | Function | A function which has access to current route object(`config.route.request`) using `this` and gets called before sending request to your `path` in custom request. | noop
 
-Solution
-1. Install `mock-api`
-2. Create a config file
 
-```Javascript
-#mock-api.config.js
+#### Route's response object
 
-module.exports = {
-  port: 4000,
-  routes_path: "./routes.js",
-  forward: {
-    mode: "custom",        
-    hostname: "https://www.practo.com",
-    headers: {
-      cookie:"_abc=xxxxxxx;sso=dkfgirhjdfvjfd4345dkfdfj"
-    }
-  }
-}
-```
+This object is used to manipulate response for custom route of `path` mentioned `config.route.request`
 
-3. Create a route file
+ > In this document this object is also referred as `config.route.request` object
 
-```Javascript
-#./routes.js
+ Property | Type | Details | Default
+ ------- | ------- | ------- | -------
+ headers | Object | This is used to manipulate response headers. This object merges and overrides response headers coming from service/API | { }
+ status | Overrides response's status code | ""
+ response_data | Response data you want from this request. This object gets populated as soon as `mock-api` gets response from your custom request server. | { }
+ beforeResponse | Function | A callback function which gets called after `mock-api` gets response from your custom request. This function gets called after populating data in `response_data` with parameters as request's `params` and `body`.  | noop
 
-modules.exports = [
-  {
-    request: {
-      path: "/users",
-      method: "GET"
-    },
-    response: {
-      data: [{
-        id: 5145606,
-        account_id: "6939366",
-        email: "",
-        name: "Keshav Kumar",
-        phone_number: "+919008xx1555",
-        country: "IN",
-        agent: false
-      }, {
-        id: 514243,
-        account_id: "12334",
-        email: "amit.xxx@gmail.com",
-        name: "Amit Ranjan",
-        phone_number: "+1xxxx1555",
-        country: "US"
-      }]
-    }
-  },
-  {
-    request: {
-      path: "/logged_in_user",
-      method: "GET",
-      forward: {
-        enabled: true // This has effect only when config's forward.mode=custom.
-      }
-    },
-    response: {
-      data: { // This data will not be returned in response when `request.forward.enabled` is `true`
-        id: 5145606,
-        account_id: "6939366",
-        email: "",
-        name: "Keshav Kumar",
-        phone_number: "+919008xx1555",
-        country: "IN",
-        agent: false
-      }
-    } 
-  },
-  {
-    request: {
-      path: "/users/1",
-      method: "GET",
-      forward: {
-        enabled: true 
-      }
-    },
-    response: {
-      data: { // This data will not be returned 
-        id: 5145606,
-        account_id: "6939366",
-        email: "",
-        name: "Keshav Kumar",
-        phone_number: "+919008xx1555",
-        country: "IN",
-        agent: false
-      }
-    } 
-  },
-  {
-    request: {
-      path: "/search/users",
-      method: "GET",
-      forward: {
-        enabled: true,  // We can skip the response object entirely when forwarding is enabled for a route
-        hostname: "https://api.github.com" // This overrides hostname set in config for this route's request
-      }
-    }
-  }
-]
-```
+#### Examples
+[Example 1](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-all)
+
+[Example 2](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-custom)
