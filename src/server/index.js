@@ -1,4 +1,4 @@
-#!/usr/bin/env nodemon
+#!/usr/bin/env node
 
 let express = require("express");
 const fs = require("fs");

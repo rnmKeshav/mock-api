@@ -1,4 +1,4 @@
-const url = require("url");
+const URL = require("url").URL;
 const superagent = require("superagent");
 
 const networkCall = function (parameters) {
