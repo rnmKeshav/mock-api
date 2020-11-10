@@ -4,7 +4,7 @@ const forwardAll = function (req, res, next) {
   let {method, url, app: {locals: {config}}, query: req_query, headers: req_headers, body} = req;
   let { forward: {hostname, query: custom_query, headers: custom_headers}} = config;
   let query = Object.assign({}, req_query, custom_query);
-  let headers = Object.assign({}, req_headers, custom_headers);
+  let headers = Object.assign({}, custom_headers);
   
   networkCall({url, method, headers, hostname, query, payload: body})
     .then(function (response_data) {
