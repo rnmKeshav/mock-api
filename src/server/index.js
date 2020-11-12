@@ -40,7 +40,7 @@ let config = {
 };
 
 if (argv.config) {
-  let configPath = path.join(cwd, argv.c);
+  let configPath = path.resolve(cwd, argv.c);
   if (fs.existsSync(configPath)) {
     console.log("Config file path:", configPath);
     config = require(configPath);
@@ -97,24 +97,24 @@ app.use(bodyParser.json());
 
 if (config && config.routes) {
   config.routes.forEach(function (route) {
-    let {request = {}, response = {}} = route;
-    let {path, method} = request;
+    let { request = {}, response = {} } = route;
+    let { path, method } = request;
     method = (method || "get").toLowerCase();
-    
+
     if (!path) {
       return;
     }
 
-    app[method](`${path}`,  insertConfig(config), handleCustomRoute(route), function (req, res) {
+    app[method](`${path}`, insertConfig(config), handleCustomRoute(route), function (req, res) {
       if (!_isEmpty(res.locals.error_data)) {
-        let {status, text} = res.locals.error_data;
-        
+        let { status, text } = res.locals.error_data;
+
         if (status) {
           res.status(status).send(text);
         }
         res.send(text);
       } else {
-        let {status: custom_status, headers: custom_headers} = response;
+        let { status: custom_status, headers: custom_headers } = response;
         if (custom_status) {
           res.status(custom_status)
         }
@@ -139,14 +139,14 @@ if (config && config.routes) {
 if (config) {
   app.all("*", insertConfig(config), forwardAll, function (req, res) {
     if (!_isEmpty(res.locals.error_data)) {
-      let {status, text} = res.locals.error_data;
-      
+      let { status, text } = res.locals.error_data;
+
       if (status) {
         res.status(status);
       }
       res.send(text);
     } else {
-      
+
       res.send(res.locals.response_data)
     }
   });
@@ -160,7 +160,7 @@ app.get("/mock_status", function (req, res) {
 });
 
 
-app.listen(config.port,  function () {
+app.listen(config.port, function () {
   console.log("Server is running on port", config.port);
 })
 
