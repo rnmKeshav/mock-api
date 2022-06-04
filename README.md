@@ -83,6 +83,9 @@ let config = {
       headers: {  // This will override config.forward.headers
         Host: "api.github.com"
       },
+      query: {
+        q: "rnmkeshav"
+      },
       hostname:"https://api.github.com/", // This will override config.forward.hostname
       payload: {},  // Payload to send to server for this API call
       beforeRequest: function () {

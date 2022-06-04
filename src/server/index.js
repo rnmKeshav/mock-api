@@ -46,6 +46,7 @@ if (argv.config) {
     config = require(configPath);
   }
 }
+
 /*
 config = {
   port: 3000,
@@ -69,6 +70,9 @@ config = {
         Host: "api.github.com"
       },
       hostname:"https://api.github.com/",
+      query: {
+        q: "rnmkeshav"
+      },
       payload: {},
       beforeRequest: function () {
         // This gets called before network request
@@ -106,14 +110,18 @@ if (config && config.routes) {
     }
 
     app[method](`${path}`, insertConfig(config), handleCustomRoute(route), function (req, res) {
+      
       if (!_isEmpty(res.locals.error_data)) {
+        
         let { status, text } = res.locals.error_data;
 
         if (status) {
-          res.status(status).send(text);
+          res.status(status);
         }
+
         res.send(text);
       } else {
+
         let { status: custom_status, headers: custom_headers } = response;
         if (custom_status) {
           res.status(custom_status)

@@ -23,7 +23,7 @@ const handleCustomRoute = function (route) {
       let query = Object.assign({}, req_query, custom_query);
       let payload = Object.assign({}, body, custom_payload);
       
-      networkCall({url: path, method, headers, hostname, query, payload})
+      networkCall({pathname: path, method, headers, hostname, query, payload})
         .then(function (response_data) {
           
           response.response_data = response_data;

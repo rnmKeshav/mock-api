@@ -5,6 +5,7 @@ const chalk = require("chalk");
 
 const networkCall = function (parameters) {
   let { method, pathname, headers = {}, query = {}, hostname, payload } = parameters;
+  // console.log("parameters", parameters);
 
   if (!hostname) {
     throw new Error("Please provide hostname for network call")
