@@ -51,6 +51,8 @@ We will discuss about route file and it's object structure later.
 #### Config file
 A `javascript` file to hold all configurations required to run the server. This file exports an object, the properties of which is used to customize `mock-api` server. This is not mandatory until you are using forwarding feature.
 
+Since this is a javascript file, you can import any external JS library or write your own code in this file. Only mandatory part is to export a javascript config object. 
+
 #### Start mock-server
 mock-server -r=routes.js
 

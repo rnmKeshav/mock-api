@@ -1,19 +1,18 @@
 #!/usr/bin/env node
 
-let express = require("express");
 const fs = require("fs");
 const path = require("path");
 
 let yargs = require("yargs");
-let cors = require("cors");
-let bodyParser = require("body-parser");
 let _isEmpty = require("lodash.isempty");
+let chalk = require("chalk");
+let chokidar = require("chokidar");
+let decache = require("decache");
 
-let forwardAll = require("./middleware/forward_all");
-let insertConfig = require("./middleware/insert_config");
-let handleCustomRoute = require("./middleware/handle_custom_route");
+let configureRoute = require("./configure_route");
+let createApp = require("./app");
 
-let app = express();
+
 
 /**
  * forward.mode = {
@@ -34,20 +33,41 @@ const argv = yargs.options({
 }).argv;
 
 const cwd = process.cwd();
-let config = {
-  port: 3000,
-  forward: {}
-};
+let config = {};
 
 if (argv.config) {
   let configPath = path.resolve(cwd, argv.c);
   if (fs.existsSync(configPath)) {
     console.log("Config file path:", configPath);
     config = require(configPath);
+
+    let config_watcher = chokidar.watch(configPath, {
+      ignored: /(^|[\/\\])\../,
+      persistent: true,
+    });
+    config_watcher
+      .on("change", (fileName) => {
+        console.log(chalk.green("change detected..."))
+          decache(fileName);
+          config = require(fileName)
+          // console.log("in change method", config);
+          configureRouteAndStartServer(true)
+      })
   }
 }
 
+if (_isEmpty(config)) {
+  console.log(chalk.bgBlue("Use `npx mock-api-setup` to create config file."));
+  throw new Error("Config not found");
+}
 
+// Add defaults to config file
+Object.assign(config, {
+  port: 3002
+}, config);
+
+// console.log("config", config);
+/*
 config = {
   port: 3002,
   forward: {
@@ -109,82 +129,14 @@ config = {
   }]
 }
 
+*/
 
 
+function configureRouteAndStartServer (is_restart) {
 
-app.use(cors());
-app.use(bodyParser.json());
-
-if (config && config.routes) {
-  config.routes.forEach(function (route) {
-    let { request = {}, response = {} } = route;
-    let { path, method } = request;
-    method = (method || "get").toLowerCase();
-
-    if (!path) {
-      return;
-    }
-
-    app[method](`${path}`, insertConfig(config), handleCustomRoute(route), function (req, res) {
-      
-      if (!_isEmpty(res.locals.error_data)) {
-        
-        let { status, text } = res.locals.error_data;
-
-        if (status) {
-          res.status(status);
-        }
-
-        res.send(text);
-      } else {
-
-        let { status: custom_status, headers: custom_headers } = response;
-        if (custom_status) {
-          res.status(custom_status)
-        }
-
-        if (custom_headers) {
-          res.set(custom_headers);
-        }
-
-        res.send(response.response_data || res.locals.response_data)
-      }
-    })
-  })
+  let app = createApp(config.port, is_restart);
+  configureRoute(config, app);  
+  
 }
 
-// console.log("All registered routes");
-// app._router.stack.forEach(function(r){
-//   if (r.route && r.route.path){
-//     console.log(r.route.path)
-//   }
-// })
-
-if (config) {
-  app.all("*", insertConfig(config), forwardAll, function (req, res) {
-    if (!_isEmpty(res.locals.error_data)) {
-      let { status, text } = res.locals.error_data;
-
-      if (status) {
-        res.status(status);
-      }
-      res.send(text);
-    } else {
-
-      res.send(res.locals.response_data)
-    }
-  });
-}
-
-
-app.get("/mock_status", function (req, res) {
-  res.json({
-    status: "ok"
-  })
-});
-
-
-app.listen(config.port, function () {
-  console.log("Server is running on port", config.port);
-})
-
+configureRouteAndStartServer(false);
