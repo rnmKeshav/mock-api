@@ -47,10 +47,9 @@ if (argv.config) {
   }
 }
 
-/*
+
 config = {
-  port: 3000,
-  headers: {},
+  port: 3002,
   forward: {
     hostname: "https://jsonplaceholder.typicode.com",
     headers: {
@@ -90,10 +89,27 @@ config = {
         // This method can change response object
       }
     }
+  }, {
+    enable_forward: true,
+    request: {
+      path: "/api/users",
+      method: "POST",
+      hostname: "https://reqres.in/",
+      payload: {},
+      headers: {
+        skip_req_headers: true, //headers which gets sent automatically from client/browser
+        skip_forward_all_headers: true, //headers which gets sent in forward_all request. `config.forward.headers` where `mock-api.config.js` object is `config`
+        // host: "https://reqres.in",
+        accept: "application/json",
+        // referer: "https://reqres.in/",
+        // "accept-encoding": "gzip",
+        // 'Content-type': "application/json"
+      }
+    }
   }]
 }
 
-*/
+
 
 
 app.use(cors());

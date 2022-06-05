@@ -22,6 +22,17 @@ const handleCustomRoute = function (route) {
       let headers = Object.assign({}, req_headers, config_headers, custom_headers);
       let query = Object.assign({}, req_query, custom_query);
       let payload = Object.assign({}, body, custom_payload);
+
+      if (headers.skip_req_headers && headers.skip_forward_all_headers) {
+        headers = Object.assign({}, custom_headers);
+        delete headers.skip_req_headers;
+      } else if (headers.skip_req_headers) {
+        headers = Object.assign({}, config_headers, custom_headers);
+        delete headers.skip_req_headers;
+      } else if (headers.skip_forward_all_headers) {
+        headers = Object.assign({}, req_headers, custom_headers);
+        delete headers.skip_forward_all_headers;
+      }
       
       networkCall({pathname: path, method, headers, hostname, query, payload})
         .then(function (response_data) {

@@ -66,16 +66,16 @@ To run `mock-api`, config(`mock-api.config.js`) file is mandatory. This config f
 let config = {
   port: 3002,
   forward: {
-    hostname: "https://jsonplaceholder.typicode.com/",  // hostname where request will be forwarded. This will be fallback for custom route.
-    headers: {  // headers to be sent in all requests.
-      cookie: "Hello=world;sdn=1", // cookie you would like to send as header when making request to your server(mentioned in hostname)
+    hostname: "https://jsonplaceholder.typicode.com", // hostname where request will be forwarded. This will be fallback for custom route.
+    headers: { // headers to be sent in all requests.
+      cookie: "pelUUID=96d2cfa0-e0ce-4795-beb3-917c5c1dd79c; _ga=GA1.2.1683668930.1598687051; _gcl_au=1.1.1869798560.1598687054; _fbp=fb.1.1598706524131.962812492;hl=en; pelUUID=174edf11de59da-068985a51643be-5b7f7327-5294d-174edf11de690c; __cfruid=e14408ee99e3a9ae0b2b1bcdfe71dda5c137e3a4-1601719873; WZRK_G=9746059b128d44d1bc23bec757dfb5c3; _gat=1; _gat_fabric=1; WZRK_S_8W6-695-WK5Z=%7B%22p%22%3A9%2C%22s%22%3A1601719832%2C%22t%22%3A1601720622%7D; modal_login=true", // cookie you would like to send as header when making request to your server(mentioned in hostname)
       host: "jsonplaceholder.typicode.com",
       accept: "application/json",
       referer: "https://jsonplaceholder.typicode.com/",
       "accept-encoding": "gzip"
     }
   },
-  routes: [{  // custom routes if you want to modify request payload or response data. This can also be used to override request/response default data(headers/status) mentioned above in config.forward
+  routes: [{  // custom routes if you want to modify request payload or response data. This can also be used to override request/response default data(headers/status) mentioned above in `config.forward`
     enable_forward: true, // true means request would be forwarded to routes.request.hostname if mentioned otherwise fallback to config.forward.hostname. false means api would be returning route.response.response_data
     request: {  // request object details. 
       path: "/search/users",  // route path for which this object will come into force.
@@ -83,10 +83,10 @@ let config = {
       headers: {  // This will override config.forward.headers
         Host: "api.github.com"
       },
+      hostname:"https://api.github.com/",
       query: {
         q: "rnmkeshav"
       },
-      hostname:"https://api.github.com/", // This will override config.forward.hostname
       payload: {},  // Payload to send to server for this API call
       beforeRequest: function () {
         // This gets called before network request
@@ -104,11 +104,32 @@ let config = {
         // This method can change response object
       }
     }
+  }, {  // To see this in action, make a POST request to `http://localhost:3002/api/users` with {"name":"morpheus","job":"leader"} as request payload 
+    enable_forward: true, 
+    request: {
+      path: "/api/users",
+      method: "POST",
+      hostname: "https://reqres.in/",
+      payload: {},
+      headers: {
+        skip_req_headers: true, //headers which gets sent automatically from client/browser
+        skip_forward_all_headers: true, //headers which gets sent in forward all request. `config.forward.headers`
+        // host: "https://reqres.in",
+        accept: "application/json",
+        // referer: "https://reqres.in/",
+        // "accept-encoding": "gzip",
+        // 'Content-type': "application/json"
+      }
+    }
   }]
-}
+
 
 module.exports = config;
 ```
+
+### Config object detail
+This is the main object which gets exported from `mock-api.config.js` 
+ > In this document, this object is also referred as `config` object
 
 Property | Type | Details | Default
 -------- | ------- | ------- | -------
@@ -118,7 +139,7 @@ routes | Array | An array which holds detail of each route where you want to do 
 
 
 ### Forward object details
-An object which help build request object to send to different service. 
+An object which help build request object to send to different service. This is **forward all** object. All the route coming to `mock-api` server will be getting forwarded according to this object rule. 
  > In this document this object is also referred as `config.forward` object  
 
 Property | Type | Details | Default
@@ -169,6 +190,38 @@ This object is used to manipulate response for custom route of `path` mentioned 
  status | Overrides response's status code | ""
  response_data | Response data you want from this request. This object gets populated as soon as `mock-api` gets response from your custom request server. | { }
  beforeResponse | Function | A callback function which gets called after `mock-api` gets response from your custom request. This function gets called after populating data in `response_data` with parameters as request's `params` and `body`.  | noop
+
+#### Route's request header object
+
+We can send specific headers for each different route with this object. We can also use this object to override headers sent from browser automatically. 
+
+Header priority: Request Headers < Forward All headers < Custom headers
+
+```
+  let headers = Object.assign({}, req_headers, config_headers, custom_headers);
+```
+
+Header group | code_variable_name | Description
+Request Headers | req_headers | The headers which gets sent from client/browser while making request to `mock-api` server. 
+Forward All headers | config_headers | The headers which gets sent from config file to all requests which match `forward` route of `config` object. This is same as `config.forward.headers`
+Custom headers | custom_headers | This is the header object which you write for each specific route. This is same as `config.route.request.headers` object. This object has highest priority for individua route.
+
+
+#### Customising route's request header object
+
+There are times when we want to skip headers from certain group like `Request Headers` or `Forward All headers` etc. You can use the following header keys in custom request's header to skip the group.
+
+Example 1: You don't want to send headers client/broswer is sending to be forwarded to your request server. 
+
+Example 2: When you have customised a route which matches the `config.forward` object but you don't want to send headers mentioned in `config.forward.headers` object
+
+Header Key | Description | Type | Default
+skip_req_headers | This will skip headers sent from client/browser. No headers from client/browser will be sent to request server | Boolean | false
+skip_forward_all_headers | This will skip headers sent from `config.forward.headers` object. The header from client/browser will still to to request server. | Boolean | false
+
+
+ > If you want to send only the header defined for route in `config.route.request.headers` then make both `skip_req_headers` and `skip_forward_all_headers` as `true` 
+
 
 #### Examples
 [Example 1](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-all)
