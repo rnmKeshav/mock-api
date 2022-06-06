@@ -34,10 +34,10 @@ const handleResponse = (res, route_response = {}) => {
     } else {
       res.set(api_server_header)
     }
-    console.log("route_response.response_data", route_response.response_data);
-    console.log("api_server_response_nody", api_server_response_nody);
+    // console.log("route_response.response_data", route_response.response_data);
+    // console.log("api_server_response_nody", api_server_response_nody);
 
-    console.log("route_response.response_data || api_server_response_nody", route_response.response_data || api_server_response_nody);
+    // console.log("route_response.response_data || api_server_response_nody", route_response.response_data || api_server_response_nody);
     
     res.send(route_response.response_data || api_server_response_nody)
     // return (route_response.response_data || api_server_response_nody);

@@ -8,8 +8,8 @@
 </head>
 <body>
   <script>
-    var user_data_promise = fetch("http://localhost:3002/posts/1", {
-      method: "PATCH",
+    var user_data_promise = fetch("http://localhost:3002/api/users", {
+      method: "POST",
       headers: {
         'Content-type': "application/json"
       },

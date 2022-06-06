@@ -13,8 +13,8 @@ const networkCall = function (parameters) {
 
   method = method.toLowerCase();
   const constructed_url = new URL(pathname, hostname);
-  console.log("headers", headers);
-  console.log("payload", payload);
+  // console.log("headers", headers);
+  // console.log("payload", payload);
   
   return new Promise(function (resolve, reject) {
     superagent[method](constructed_url)

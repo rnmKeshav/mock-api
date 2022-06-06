@@ -3,7 +3,7 @@
 2. Send custom request header in an API request (external_server_1)
 3. Manipulate request before sending an API request
 4. PATCH API call with variable in route
-5. Sent request to custom API server (external_server_2)
+5. Send request to custom API server (external_server_2)
 6. Set custom response 
 7. Set custom response status code
 
@@ -180,7 +180,45 @@ let config = {
 
 In the above config, makes a PATCH request to `https://jsonplaceholder.typicode.com/posts/1`. Above configuration also usage `beforeRequest` to manipulate `headers` as well as `payload` before sending request. 
 
+### Send request to custom API server (external_server_2)
 
+When we specify `hostname` in route object, it does not use forward config i.e `config.forward` but usage provided hostname. 
+
+```
+let config = {
+  port: 3002,
+  forward: {
+    hostname: "https://jsonplaceholder.typicode.com", // hostname where request will be forwarded. This will be fallback for custom route.
+    headers: { // headers to be sent in all requests.
+      cookie: "pelUUID=96d2cfa0-e0ce-4795-beb3-917c5c1dd79c; _ga=GA1.2.1683668930.1598687051; _gcl_au=1.1.1869798560.1598687054; _fbp=fb.1.1598706524131.962812492;hl=en; pelUUID=174edf11de59da-068985a51643be-5b7f7327-5294d-174edf11de690c; __cfruid=e14408ee99e3a9ae0b2b1bcdfe71dda5c137e3a4-1601719873; WZRK_G=9746059b128d44d1bc23bec757dfb5c3; _gat=1; _gat_fabric=1; WZRK_S_8W6-695-WK5Z=%7B%22p%22%3A9%2C%22s%22%3A1601719832%2C%22t%22%3A1601720622%7D; modal_login=true", // cookie you would like to send as header when making request to your server(mentioned in hostname)
+      host: "jsonplaceholder.typicode.com",
+      accept: "application/json",
+      referer: "https://jsonplaceholder.typicode.com/",
+      "accept-encoding": "gzip"
+    }
+  },
+  routes: [{  // To see this in action, make a POST request to `http://localhost:3002/api/users` with {"name":"morpheus","job":"leader"} as request payload 
+    enable_forward: true, 
+    request: {
+      path: "/api/users",
+      method: "POST",
+      hostname: "https://reqres.in/",
+      payload: {},
+      headers: {
+        skip_req_headers: true, //headers which gets sent automatically from client/browser
+        skip_forward_all_headers: true, //headers which gets sent in forward all request. `config.forward.headers`
+        // host: "https://reqres.in",
+        accept: "application/json",
+        // referer: "https://reqres.in/",
+        // "accept-encoding": "gzip",
+        // 'Content-type': "application/json"
+      }
+    }
+  }]
+}
+```
+
+The above configuration will send all POST requests routed to `/api/users` to `https://reqres.in/api/users` route. 
 ### Set custom response 
 
 By setting `config.routes.response.response_data` we can set our own custom response data for a requested route path. This will override any response coming from external API server(`https://jsonplaceholder.typicode.com` in this case)
