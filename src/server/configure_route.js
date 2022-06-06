@@ -4,6 +4,46 @@ let forwardAll = require("./middleware/forward_all");
 let insertConfig = require("./middleware/insert_config");
 let handleCustomRoute = require("./middleware/handle_custom_route");
 
+const handleResponse = (res, route_response = {}) => {
+  if (!_isEmpty(res.locals.error_data)) {
+          
+    let { status, text } = res.locals.error_data;
+    
+    if (status) {
+      res.status(status);
+    }
+
+    res.send(text);
+  } else {
+
+    let { status: custom_status, headers: custom_headers } = route_response;
+    let {
+      status: api_server_status, 
+      body: api_server_response_nody,
+      header: api_server_header
+    } = res.locals.response_data;
+    // console.log("res.locals.response_data", res.locals.response_data);
+    if (custom_status) {
+      res.status(custom_status)
+    } else {
+      res.status(api_server_status);
+    }
+
+    if (custom_headers) {
+      res.set(custom_headers);
+    } else {
+      res.set(api_server_header)
+    }
+    console.log("route_response.response_data", route_response.response_data);
+    console.log("api_server_response_nody", api_server_response_nody);
+
+    console.log("route_response.response_data || api_server_response_nody", route_response.response_data || api_server_response_nody);
+    
+    res.send(route_response.response_data || api_server_response_nody)
+    // return (route_response.response_data || api_server_response_nody);
+  }
+}
+
 //This is an impure function. It modifies app to add routes.
 const configureRoute = (config, app) => {
 
@@ -19,29 +59,7 @@ const configureRoute = (config, app) => {
       }
   
       app[method](`${path}`, insertConfig(config), handleCustomRoute(route), function (req, res) {
-        
-        if (!_isEmpty(res.locals.error_data)) {
-          
-          let { status, text } = res.locals.error_data;
-  
-          if (status) {
-            res.status(status);
-          }
-  
-          res.send(text);
-        } else {
-  
-          let { status: custom_status, headers: custom_headers } = response;
-          if (custom_status) {
-            res.status(custom_status)
-          }
-  
-          if (custom_headers) {
-            res.set(custom_headers);
-          }
-  
-          res.send(response.response_data || res.locals.response_data)
-        }
+        handleResponse(res, response);
       })
     })
   }
@@ -50,17 +68,7 @@ const configureRoute = (config, app) => {
   // Fallback to support forwarding all other route 
   if (config) {
     app.all("*", insertConfig(config), forwardAll, function (req, res) {
-      if (!_isEmpty(res.locals.error_data)) {
-        let { status, text } = res.locals.error_data;
-  
-        if (status) {
-          res.status(status);
-        }
-        res.send(text);
-      } else {
-  
-        res.send(res.locals.response_data)
-      }
+      handleResponse(res);
     });
   }
 }

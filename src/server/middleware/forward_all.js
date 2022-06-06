@@ -8,7 +8,7 @@ const forwardAll = function (req, res, next) {
 
   networkCall({ pathname, method, headers, hostname, query, payload: body })
     .then(function (response_data) {
-
+      
       Object.assign(res.locals, {
         response_data
       })

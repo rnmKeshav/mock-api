@@ -1,3 +1,9 @@
+function getAPIToken() {
+  return {
+    "X-API-TOKEN": "XXXXXXXX"
+  };
+}
+
 let config = {
   port: 3002,
   forward: {
@@ -23,7 +29,7 @@ let config = {
         q: "rnmkeshav"
       },
       payload: {},  // Payload to send to server for this API call
-      beforeRequest: function ({params, body}) {
+      beforeRequest: function () {
         // This gets called before network request
         // This method can change request object.
       }
@@ -34,7 +40,7 @@ let config = {
       },
       status: "", // Can be used to override response status code
       response_data: {},  // This is where response data is placed when API call succeeds.
-      beforeResponse: function ({params, body}) {
+      beforeResponse: function () {
         // This method gets called after network request
         // This method can change response object
       }
@@ -55,6 +61,38 @@ let config = {
         // "accept-encoding": "gzip",
         // 'Content-type': "application/json"
       }
+    }
+  }, {
+    enable_forward: true,
+    request: {
+      path: "/posts/:post_id",
+      method: "PATCH",
+      payload: {
+        title: 'foo'
+      },
+      headers: {
+        skip_forward_all_headers: true,
+        skip_req_headers: true,
+        "X-API-TOKEN": getAPIToken()
+      },
+      beforeRequest: function ({params, body}) {
+        // console.log("this", this);
+        // console.log("params, body", params, body);
+        let {post_id} = params;
+
+        const getProfileToken = () => 'YYYYY';
+
+        this.payload['post_multiplier'] = 2*post_id;
+        this.headers["X-PROFILE-TOKEN"] = getProfileToken()
+      }
+    },
+    response: {
+      status: 206,
+      response_data: {
+        "Name":"Keshav Kumar",
+        "userId":1,
+        "githubHandle":"rnmkeshav"
+      },
     }
   }]
 }

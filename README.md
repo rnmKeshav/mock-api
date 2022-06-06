@@ -83,12 +83,12 @@ let config = {
       headers: {  // This will override config.forward.headers
         Host: "api.github.com"
       },
-      hostname:"https://api.github.com/",
+      hostname:"https://api.github.com/", // This will override config.forward.hostname
       query: {
         q: "rnmkeshav"
       },
       payload: {},  // Payload to send to server for this API call
-      beforeRequest: function () {
+      beforeRequest: function ({params, body}) {
         // This gets called before network request
         // This method can change request object.
       }
@@ -175,7 +175,7 @@ headers | Object | Header object which will be sent when you make request to thi
 hostname | String | Hostname for custom request. This when specified overrides `config.forward.hostname` | undefined
 payload | Object | This object gets merged with your client's(browser) POST request's body to construct final payload and sent to mentioned `path` in custom request. | { }
 query | Object | Query param to send with request | { }
-beforeRequest | Function | A function which has access to current route object(`config.route.request`) using `this` and gets called before sending request to your `path` in custom request. | noop
+beforeRequest | Function | A function which has access to current route object(`config.route.request`) using `this` and gets called before sending request to your `path` in custom request. This function also provides access to route's request params and request's payload body | noop
 
 
 #### Route's response object
@@ -202,6 +202,7 @@ Header priority: Request Headers < Forward All headers < Custom headers
 ```
 
 Header group | code_variable_name | Description
+------ | ------ | ------
 Request Headers | req_headers | The headers which gets sent from client/browser while making request to `mock-api` server. 
 Forward All headers | config_headers | The headers which gets sent from config file to all requests which match `forward` route of `config` object. This is same as `config.forward.headers`
 Custom headers | custom_headers | This is the header object which you write for each specific route. This is same as `config.route.request.headers` object. This object has highest priority for individua route.
@@ -216,6 +217,7 @@ Example 1: You don't want to send headers client/broswer is sending to be forwar
 Example 2: When you have customised a route which matches the `config.forward` object but you don't want to send headers mentioned in `config.forward.headers` object
 
 Header Key | Description | Type | Default
+------ | ------ | ------ | ------
 skip_req_headers | This will skip headers sent from client/browser. No headers from client/browser will be sent to request server | Boolean | false
 skip_forward_all_headers | This will skip headers sent from `config.forward.headers` object. The header from client/browser will still to to request server. | Boolean | false
 
