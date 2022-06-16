@@ -4,7 +4,6 @@ let express = require("express");
 const fs = require("fs");
 const path = require("path");
 
-let yargs = require("yargs");
 let cors = require("cors");
 let bodyParser = require("body-parser");
 let _isEmpty = require("lodash.isempty");
@@ -12,6 +11,7 @@ let _isEmpty = require("lodash.isempty");
 let forwardAll = require("./middleware/forward_all");
 let insertConfig = require("./middleware/insert_config");
 let handleCustomRoute = require("./middleware/handle_custom_route");
+let command = require('./command_setup');
 
 let app = express();
 
@@ -23,27 +23,23 @@ let app = express();
  * 
  **/
 
-
-const argv = yargs.options({
-  config: {
-    alias: "c",
-    describe: "Relative path to config",
-    default: "mock-api.config.js",
-    type: "string"
-  }
-}).argv;
-
-const cwd = process.cwd();
+ 
+const options = command.opts();
 let config = {
   port: 3000,
   forward: {}
 };
 
-if (argv.config) {
-  let configPath = path.resolve(cwd, argv.c);
-  if (fs.existsSync(configPath)) {
+
+if (options.config) {
+  const cwd = process.cwd();
+  let configPath = path.resolve(cwd, options.config);
+
+  if (fs.existsSync(configPath) && !fs.lstatSync(configPath).isDirectory()) {
     console.log("Config file path:", configPath);
     config = require(configPath);
+  } else {
+    console.log("Given config file does not exists or it is not a valid file ! Using default config...")
   }
 }
 /*
