@@ -16,12 +16,12 @@
   "dependencies": {
     "body-parser": "1.18.3",
     "chalk": "4.1.0",
+    "commander": "9.3.0",
     "cors": "2.8.5",
     "express": "4.16.4",
     "lodash.isempty": "4.4.0",
     "ncp": "2.0.0",
-    "superagent": "4.0.0",
-    "yargs": "12.0.5"
+    "superagent": "4.0.0"
   },
   "devDependencies": {
     "nodemon": "2.0.4",
