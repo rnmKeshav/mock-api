@@ -5,40 +5,37 @@
 */
 const fs = require("fs");
 const path = require("path");
+const { program } = require('commander');
 
 const createServer = require("./server/index");
 const buildConfig = require("./build_config");
+program
+  .name('cli.js')
+  .description('Build config')
+  .option('-c, --config <string>', 'Relative path to config', "mock-api.config.js")
+  .option('-r, --routes <string>', 'Relative path to route file');
 
-const argv = require("yargs").options({
-  config: {
-    alias: "c",
-    describe: "Relative path to config",
-    default: "mock-api.config.js",
-    type: "string"
-  },
-  routes: {
-    alias: "r",
-    describe: "Relative path to route file",
-    default: "",
-    type: "string"
-  }
-}).argv;
+program.parse();
+const options = program.opts();
+
 
 const basePath = process.cwd();
 let cliConfig = {};
 
-if (argv.config) {
-  let configPath = path.join(basePath, argv.c);
-  if (fs.existsSync(configPath)) {
+if (options.config) {
+  let configPath = path.join(basePath, options.config);
+  if (fs.existsSync(configPath) && !fs.lstatSync(configPath).isDirectory()) {
     console.log("Config file path:", configPath);
-    cliConfig = require(configPath);
+    config = require(configPath);
+  } else {
+    console.log("Given config file does not exists or it is not a valid file ! Using default config...")
   }
 }
 
-if (argv.routes) {
-  console.log("Routes path received", argv.routes);
+if (options.routes) {
+  console.log("Routes path received", options.routes);
 
-  cliConfig.routes_path = argv.routes;
+  cliConfig.routes_path = options.routes;
 }
 
 // if (cliConfig.routes_path) {

@@ -1,5 +1,6 @@
 # Mock-api
 An easy and configurable mock-server.
+## NOTE: THIS VERSION(v1) IS DEPRECATED AND NO MORE UNDER ACTIVE DEVELOPMENT
 
 ## Features
  - [x] A fake REST API data server :smirk:
