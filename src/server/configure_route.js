@@ -38,8 +38,8 @@ const handleResponse = (res, route_response = {}) => {
     // console.log("api_server_response_nody", api_server_response_nody);
 
     // console.log("route_response.response_data || api_server_response_nody", route_response.response_data || api_server_response_nody);
-    
-    res.send(route_response.response_data || api_server_response_nody)
+    let response_data = _isEmpty(route_response.response_data) ? api_server_response_nody: oute_response.response_data;
+    res.send(response_data)
     // return (route_response.response_data || api_server_response_nody);
   }
 }

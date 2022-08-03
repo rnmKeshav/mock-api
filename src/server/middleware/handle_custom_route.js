@@ -40,6 +40,7 @@ const handleCustomRoute = function (route) {
         .then(function (response_data) {
           // let {body, header, status} = response_data;
           // response.response_data = response_data.body;
+          // console.log("response_data", response_data);
           Object.assign(res.locals, {
             response_data
           })

@@ -51,7 +51,7 @@ if (argv.config) {
           decache(fileName);
           config = require(fileName)
           // console.log("in change method", config);
-          configureRouteAndStartServer(true)
+          configureRouteAndStartServer(config, true)
       })
   }
 }
@@ -61,12 +61,16 @@ if (_isEmpty(config)) {
   throw new Error("Config not found");
 }
 
-// Add defaults to config file
-Object.assign(config, {
-  port: 3002
-}, config);
+function addDefaultsToConfig (config) {
+  let default_configs = {
+    port: 3002
+  }
+  // Add defaults to config file
+  return Object.assign(default_configs, config);
+}
 
-// console.log("config", config);
+
+console.log("config", config);
 /*
 config = {
   port: 3002,
@@ -132,11 +136,12 @@ config = {
 */
 
 
-function configureRouteAndStartServer (is_restart) {
-
-  let app = createApp(config.port, is_restart);
-  configureRoute(config, app);  
+function configureRouteAndStartServer (config, is_restart) {
+  let new_config = addDefaultsToConfig(config);
+  let app = createApp(new_config.port, is_restart);
+  configureRoute(new_config, app);  
   
 }
 
-configureRouteAndStartServer(false);
+// addDefaultsToConfig(config);
+configureRouteAndStartServer(config, false);

@@ -5,7 +5,7 @@ function getAPIToken() {
 }
 
 let config = {
-  port: 3002,
+  // port: 3003,
   forward: {
     hostname: "https://jsonplaceholder.typicode.com", // hostname where request will be forwarded. This will be fallback for custom route.
     headers: { // headers to be sent in all requests.

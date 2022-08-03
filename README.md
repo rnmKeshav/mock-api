@@ -26,6 +26,8 @@ npx mock-api-setup
 ```
 
 Step 2:
+
+Run following command from terminal to start mock-api server
 ```
 npx mock-api
 ```
@@ -40,7 +42,7 @@ Add npm script in your `package.json` file.
 }
 ```
 
-Run `mock-api` from terminal.
+Run following command from terminal to start mock-api 
 
 ```
 npm run mock-api
@@ -48,7 +50,19 @@ npm run mock-api
 
 ### Testing
 
-Open browser and hit `http://localhost:3002/photos/1`
+Open browser and hit 
+
+ - Test 1:
+
+`http://localhost:3002/photos/1`
+
+The above URL fetches data from `https://jsonplaceholder.typicode.com` API server which is default configured in your `mock-api.config.js` file. All the request will goto default server until it is overriden by custom route.
+
+- Test 2:
+
+`http://localhost:3002/search/users`
+
+The above URL fetches data from `https://api.github.com/` which is mentioned in custom routes of `mock-api.config.js` file.
 
 ### How mock-api works
 _This package usage `express` to create a proxy server. It takes your request, checks request method and url passes it through some middleware. It is these middleware which calls `route.beforeRequest` before making request and pick `route.payload`(more on this later) to make api call to your service. Middleware also puts response from your service(provided `hostname` in config/route) to `routes.response_data` and calls `routes.beforeResponse()` before sending response back to client. Middleware usage config file to create and manipulate request/response._ 
@@ -229,3 +243,54 @@ skip_forward_all_headers | This will skip headers sent from `config.forward.head
 [Example 1](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-all)
 
 [Example 2](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-custom)
+
+
+## For Developers
+
+### Method 1
+
+- Install mock-api in your existing repository with following command
+
+```
+npm install --save-dev https://github.com/rnmKeshav/mock-api/tree/{your_branch_name}
+```
+
+- Add script in package.json to run mock-api 
+
+```
+"scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "mock-api": "mock-api",
+  "mock-api-setup": "mock-api-setup"
+},
+```
+
+- Run setup script
+
+```
+npm run mock-api-setup
+```
+
+- Run mock-api server
+
+```
+npm run mock-api
+```
+
+### Method 2
+
+- Step 1:
+
+Clone this repo 
+
+- Step 2:
+
+Navigate to `mock-api/examples/custom` folder
+
+- Step 3
+
+Run `npm run mock-api` in terminal
+
+- Step 4
+
+Run `mock-api/examples/custom/index.html` with live server to make requests.
