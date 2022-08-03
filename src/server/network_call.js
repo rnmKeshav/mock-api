@@ -5,6 +5,7 @@ const chalk = require("chalk");
 
 const networkCall = function (parameters) {
   let { method, pathname, headers = {}, query = {}, hostname, payload } = parameters;
+  // console.log("parameters", parameters);
 
   if (!hostname) {
     throw new Error("Please provide hostname for network call")
@@ -12,7 +13,9 @@ const networkCall = function (parameters) {
 
   method = method.toLowerCase();
   const constructed_url = new URL(pathname, hostname);
-
+  // console.log("headers", headers);
+  // console.log("payload", payload);
+  
   return new Promise(function (resolve, reject) {
     superagent[method](constructed_url)
       .set(headers)
@@ -20,7 +23,15 @@ const networkCall = function (parameters) {
       .query(query)
       .then(function (response_data) {
         console.log(chalk.green(JSON.stringify({ method, constructed_url, payload, query })));
-        resolve(response_data.body);
+        // console.log("response_data.body", response_data);
+        let res_body = response_data.body;
+        let res_status = response_data.statusCode;
+        let res_header = response_data.header;
+        resolve({
+          body: res_body,
+          status: res_status,
+          // header: res_header
+        });
       })
       .catch(function (err) {
         console.log(chalk.red(JSON.stringify({ method, constructed_url, payload, query, headers })));
@@ -30,6 +41,7 @@ const networkCall = function (parameters) {
           console.log(chalk.redBright("err", err));
           reject();
         };
+        // console.log("error object in network call", err);
         reject({
           text: error_text,
           status: err.status

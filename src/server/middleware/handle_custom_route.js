@@ -2,13 +2,14 @@ let networkCall = require("../network_call");
 
 const handleCustomRoute = function (route) {
   return function (req, res, next) {
-    let {enable_forward, request = {}, response = {}} = route;
     let {params, body} = req;
-
-    if (request.beforeRequest) {
-      request.beforeRequest();
+    if (route.request.beforeRequest) {
+      route.request.beforeRequest({params, body});
     }
 
+    // This should be bellow beforeRequest function to get updated value of request object.
+    let {enable_forward, request = {}, response = {}} = route;
+    
     // The callback function receives request's params and body. 
     if (!enable_forward) {
       if (response.beforeResponse) {
@@ -22,11 +23,24 @@ const handleCustomRoute = function (route) {
       let headers = Object.assign({}, req_headers, config_headers, custom_headers);
       let query = Object.assign({}, req_query, custom_query);
       let payload = Object.assign({}, body, custom_payload);
+
+      if (headers.skip_req_headers && headers.skip_forward_all_headers) {
+        headers = Object.assign({}, custom_headers);
+        delete headers.skip_req_headers;
+        delete headers.skip_forward_all_headers;
+      } else if (headers.skip_req_headers) {
+        headers = Object.assign({}, config_headers, custom_headers);
+        delete headers.skip_req_headers;
+      } else if (headers.skip_forward_all_headers) {
+        headers = Object.assign({}, req_headers, custom_headers);
+        delete headers.skip_forward_all_headers;
+      }
       
-      networkCall({url: path, method, headers, hostname, query, payload})
+      networkCall({pathname: path, method, headers, hostname, query, payload})
         .then(function (response_data) {
-          
-          response.response_data = response_data;
+          // let {body, header, status} = response_data;
+          // response.response_data = response_data.body;
+          // console.log("response_data", response_data);
           Object.assign(res.locals, {
             response_data
           })
