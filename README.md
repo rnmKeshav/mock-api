@@ -240,9 +240,9 @@ skip_forward_all_headers | This will skip headers sent from `config.forward.head
 
 
 #### Examples
-[Example 1](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-all)
+[Example 1](https://github.com/rnmKeshav/mock-api/tree/master/examples/basic)
 
-[Example 2](https://github.com/rnmKeshav/mock-api-example/tree/master/forward-custom)
+[Example 2](https://github.com/rnmKeshav/mock-api/tree/master/examples/custom)
 
 
 ## For Developers
