@@ -171,7 +171,7 @@ An object which you can use to let `mock-api` know you want to perform some mani
 
 Property | Type | Details | Default
 ------- | ------- | ------- | -------
-enable_forward | Boolean | This flag tells `mock-api` that should it forward the request for mentioned `path` or not. | False
+enable_forward | Boolean | This flag tells `mock-api` that should it forward the request for mentioned `path` or not. If `false`, the request to this route will return `response` with specified headers, status and response_data. | false
 request | Object | This object tells request details which will be used for `request.path` url. We can use this object to modify POST payload, query params, headers sent to service etc. | { }  
 response | Object | This object tells response details which will be used for `request.path` url. We can use this object to modify response data, response headers, status codes etc. | { }
 
@@ -201,8 +201,8 @@ This object is used to manipulate response for custom route of `path` mentioned 
  Property | Type | Details | Default
  ------- | ------- | ------- | -------
  headers | Object | This is used to manipulate response headers. This object merges and overrides response headers coming from service/API | { }
- status | Overrides response's status code | ""
- response_data | Response data you want from this request. This object gets populated as soon as `mock-api` gets response from your custom request server. | { }
+ status | Number | Overrides response's status code | ""
+ response_data | Object | Response data you want from this request. This object gets populated as soon as `mock-api` gets response from your custom request server. | { }
  beforeResponse | Function | A callback function which gets called after `mock-api` gets response from your custom request. This function gets called after populating data in `response_data` with parameters as request's `params` and `body`.  | noop
 
 #### Route's request header object
