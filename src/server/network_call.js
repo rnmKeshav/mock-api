@@ -22,7 +22,7 @@ const networkCall = function (parameters) {
       .send(!_isEmpty(payload) ? payload : null)
       .query(query)
       .then(function (response_data) {
-        console.log(chalk.green(JSON.stringify({ method, constructed_url, payload, query })));
+        console.log(chalk.green(JSON.stringify({ method, constructed_url, payload, query, headers })));
         // console.log("response_data.body", response_data);
         let res_body = response_data.body;
         let res_status = response_data.statusCode;

@@ -1,6 +1,6 @@
 {
   "name": "@rnmkeshav/mock-api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A fake API server for all type of frontend development",
   "main": "src/server/index.js",
   "scripts": {

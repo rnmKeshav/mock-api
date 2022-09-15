@@ -46,7 +46,7 @@ let config = {
       }
     }
   }, {  // To see this in action, make a POST request to `http://localhost:3002/api/users` with {"name":"morpheus","job":"leader"} as request payload 
-    enable_forward: true, 
+    enable_forward: false, 
     request: {
       path: "/api/users",
       method: "POST",
@@ -61,6 +61,14 @@ let config = {
         // "accept-encoding": "gzip",
         // 'Content-type': "application/json"
       }
+    },
+    response: {
+      status: 206,
+      response_data: {
+        "Name":"Keshav Kumar",
+        "userId":1,
+        "githubHandle":"rnmkeshav"
+      },
     }
   }, {
     enable_forward: true,
