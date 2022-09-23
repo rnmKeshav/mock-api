@@ -9,6 +9,7 @@ const createApp = (port, is_restart) => {
   let app = express();
   app.use(cors());
   app.use(bodyParser.json());
+  // app.use(bodyParser.text({type: '*/*'}));
 
   app.get("/mock_status", function (req, res) {
     res.json({
