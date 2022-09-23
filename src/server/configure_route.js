@@ -16,31 +16,38 @@ const handleResponse = (res, route_response = {}, enable_forward) => {
     res.send(text);
   } else {
 
-    let { status: custom_status, headers: custom_headers } = route_response;
+    let { status: custom_status, headers: custom_headers, 
+      response_data: custom_response_data } = route_response;
     let {
       status: api_server_status, 
       body: api_server_response_body,
       header: api_server_header
     } = res.locals.response_data || {};
+    let status_to_send, headers_to_send = {}, response_data_to_send = {};
+
     // console.log("res.locals.response_data", res.locals.response_data);
-    if (enable_forward) {
-      res.status(api_server_status);
+    // console.log("api_server_status", api_server_status);
+
+    if (enable_forward === false) {
+      status_to_send = custom_status || 200;
+      headers_to_send = custom_headers;
+      response_data_to_send = custom_response_data;
+
     } else {
-      res.status(custom_status)
+      status_to_send = api_server_status;
+      headers_to_send = api_server_header;
+      response_data_to_send = api_server_response_body;
     }
 
-    if (enable_forward) {
-      res.set(api_server_header)
-    } else {
-      res.set(custom_headers);
-    }
+    res.status(status_to_send);
+    res.set(headers_to_send);
     // console.log("route_response", route_response);
     // console.log("route_response.response_data", route_response.response_data);
     // console.log("api_server_response_body", api_server_response_body);
 
     // console.log("route_response.response_data || api_server_response_body", route_response.response_data || api_server_response_body);
-    let response_data = enable_forward ? api_server_response_body: route_response.response_data;
-    res.send(response_data)
+    // let response_data = enable_forward ? api_server_response_body: route_response.response_data;
+    res.send(response_data_to_send)
     // return (route_response.response_data || api_server_response_body);
   }
 }
