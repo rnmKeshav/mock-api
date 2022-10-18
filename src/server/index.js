@@ -70,7 +70,7 @@ function addDefaultsToConfig (config) {
 }
 
 
-console.log("config", config);
+// console.log("config", config);
 /*
 config = {
   port: 3002,

@@ -102,7 +102,7 @@ let config = {
         q: "rnmkeshav"
       },
       payload: {},  // Payload to send to server for this API call
-      beforeRequest: function ({params, body}) {
+      beforeRequest: function ({params, body, headers, query, route}) {
         // This gets called before network request
         // This method can change request object.
       }
@@ -113,7 +113,7 @@ let config = {
       },
       status: "", // Can be used to override response status code
       response_data: {},  // This is where response data is placed when API call succeeds.
-      beforeResponse: function () {
+      beforeResponse: function ({params, body, headers, query, route}) {
         // This method gets called after network request
         // This method can change response object
       }
@@ -192,6 +192,24 @@ query | Object | Query param to send with request | { }
 beforeRequest | Function | A function which has access to current route object(`config.route.request`) using `this` and gets called before sending request to your `path` in custom request. This function also provides access to route's request params and request's payload body | noop
 
 
+#### beforeRequest function explanation
+
+This function can be used to manipulate request object before actually sending the request out of `mock-api` server. You can imagine this as a middleware which calls your function code and lets you modify the request object.
+
+This is a callback function with following signature:
+
+```
+beforeRequest({params, body, headers, query, route})
+```
+
+Property | Type | Details | Default
+------- | ------- | ------- | -------
+params | Object | This holds data passed as request URL params. For example a request to path: `/posts/:post_id` will provide params as `{ post_id: '1' }` | {}
+body | Object | This holds data passed as post/patch method payload | {}
+headers | Object | This holds request header object. This includes custom as well as header sent from client if any.  | {}
+query | Object | This holds request query parameters | {}
+route | Object | This holds current route object | Current Route Object
+
 #### Route's response object
 
 This object is used to manipulate response for custom route of `path` mentioned `config.route.request`
@@ -204,6 +222,24 @@ This object is used to manipulate response for custom route of `path` mentioned 
  status | Number | Overrides response's status code | ""
  response_data | Object | Response data you want from this request. This object gets populated as soon as `mock-api` gets response from your custom request server. | { }
  beforeResponse | Function | A callback function which gets called after `mock-api` gets response from your custom request. This function gets called after populating data in `response_data` with parameters as request's `params` and `body`.  | noop
+
+ #### beforeResponse function explanation
+
+This function can be used to manipulate response object before actually sending the response back from `mock-api` server. You can imagine this as a middleware which calls your function code and lets you modify the response object.
+
+This is a callback function with following signature:
+
+```
+beforeResponse({params, body, headers, query, route})
+```
+
+Property | Type | Details | Default
+------- | ------- | ------- | -------
+params | Object | This holds data passed as request URL params. For example a request to path: `/posts/:post_id` will provide params as `{ post_id: '1' }` | {}
+body | Object | This holds data passed as post/patch method payload | {}
+headers | Object | This holds request header object. This includes custom as well as header sent from client if any.  | {}
+query | Object | This holds request query parameters | {}
+route | Object | This holds current route object | Current Route Object
 
 #### Route's request header object
 

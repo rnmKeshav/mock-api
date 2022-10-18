@@ -29,9 +29,11 @@ let config = {
         q: "rnmkeshav"
       },
       payload: {},  // Payload to send to server for this API call
-      beforeRequest: function () {
+      beforeRequest: function (obj) {
         // This gets called before network request
         // This method can change request object.
+
+        // console.log("inside before request", obj, this)
       }
     },
     response: {
@@ -40,9 +42,11 @@ let config = {
       },
       status: "", // Can be used to override response status code
       response_data: {},  // This is where response data is placed when API call succeeds.
-      beforeResponse: function () {
+      beforeResponse: function (obj) {
         // This method gets called after network request
         // This method can change response object
+
+        // console.log("inside before response", obj, this)
       }
     }
   }, {  // To see this in action, make a POST request to `http://localhost:3002/api/users` with {"name":"morpheus","job":"leader"} as request payload 
@@ -60,6 +64,12 @@ let config = {
         // referer: "https://reqres.in/",
         // "accept-encoding": "gzip",
         // 'Content-type': "application/json"
+      },
+      beforeRequest: function (obj) {
+        // This gets called before network request
+        // This method can change request object.
+
+        // console.log("inside before request", obj, this)
       }
     },
     response: {
@@ -69,6 +79,12 @@ let config = {
         "userId":1,
         "githubHandle":"rnmkeshav"
       },
+      beforeResponse: function (obj) {
+        // This method gets called after network request
+        // This method can change response object
+
+        //console.log("inside before response", obj, this)
+      }
     }
   }, {
     enable_forward: true,
@@ -87,7 +103,7 @@ let config = {
         // console.log("this", this);
         // console.log("params, body", params, body);
         let {post_id} = params;
-
+        // console.log("inside before request", params, this)
         const getProfileToken = () => 'YYYYY';
 
         this.payload['post_multiplier'] = 2*post_id;
