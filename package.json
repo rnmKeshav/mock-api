@@ -19,7 +19,7 @@
     "chokidar": "3.5.3",
     "cors": "2.8.5",
     "decache": "4.6.1",
-    "express": "4.16.4",
+    "express": "4.19.2",
     "lodash.isempty": "4.4.0",
     "ncp": "2.0.0",
     "superagent": "4.0.0",
